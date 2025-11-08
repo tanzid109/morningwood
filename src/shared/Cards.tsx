@@ -20,7 +20,7 @@ type StreamCardProps = {
     className?: string;
 };
 
-export default function StreamCard({
+export default function MainCard({
     title,
     category,
     streamer,

@@ -26,15 +26,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${sora.variable} antialiased`}
-      >
-        <SidebarProvider >
+      <body className={`${sora.variable} antialiased`}>
+        <SidebarProvider>
           <AppSidebar />
           <SidebarInset>
-            <header className="sticky bg-[#24120C] top-0 z-50 backdrop-blur-xl flex justify-between items-center p-5 shrink-0 gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-auto border-b border-[#5A392F]">
+            <header className="sticky bg-[#24120C] top-0 z-50 backdrop-blur-xl flex flex-wrap justify-between items-center p-5 gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-auto border-b border-[#5A392F]">
+
+              {/* Left section */}
               <div className="flex items-center justify-center gap-3 px-4">
                 <SidebarTrigger className="-ml-1" />
+                {/* Logo placeholder */}
                 {/* <div className="relative mx-auto w-24 h-24">
                   <Image
                     src="/assets/logo.png"
@@ -45,16 +46,20 @@ export default function RootLayout({
                   />
                 </div> */}
               </div>
-              <div>
+
+              {/* Search input */}
+              <div className="flex-1 min-w-[150px] max-w-full md:max-w-[24rem]">
                 <InputGroup>
-                  <InputGroupInput className="w-96 " placeholder="Search your favorite channel" />
+                  <InputGroupInput className="w-full" placeholder="Search your favorite channel" />
                   <InputGroupAddon>
-                    <SearchIcon /> |
+                    <SearchIcon />
                   </InputGroupAddon>
                 </InputGroup>
               </div>
-              <div className="flex items-center gap-6">
-                <Bell className="text-[#FDD3C6]"/>
+
+              {/* Right section */}
+              <div className="flex items-center gap-4 md:gap-6 flex-wrap">
+                <Bell className="text-[#FDD3C6]" />
                 <div>
                   <ButtonGroup>
                     <Button variant="outline">Sign In</Button>
@@ -63,10 +68,9 @@ export default function RootLayout({
                 </div>
               </div>
             </header>
-            <div className="px-8">
-              {
-                children
-              }
+
+            <div className="px-4 md:px-8">
+              {children}
             </div>
           </SidebarInset>
           <Toaster position="top-center" />
@@ -75,5 +79,3 @@ export default function RootLayout({
     </html>
   );
 }
-
-
