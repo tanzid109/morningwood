@@ -1,9 +1,15 @@
-import React from 'react';
+import GamingStreams from '@/Pages/Live/GamingStreams';
+import IRL from '@/Pages/Live/IRL';
+import LatestStreams from '@/Pages/Live/LatestStreams';
+import LiveStream from '@/Pages/Live/LiveStream';
 
 const page = () => {
     return (
-        <div className='p-10'>
-            Live
+        <div>
+            <LiveStream/>
+            <LatestStreams/>
+            <GamingStreams/>
+            <IRL/>
         </div>
     );
 };

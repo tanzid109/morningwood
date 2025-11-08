@@ -63,7 +63,7 @@ export default function RootLayout({
                 </div>
               </div>
             </header>
-            <div className="bg-[#24120C] flex flex-1 flex-col gap-4 p-4 pt-0">
+            <div className="px-8">
               {
                 children
               }
