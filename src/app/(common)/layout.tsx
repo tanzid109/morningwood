@@ -10,6 +10,7 @@ import { ButtonGroup } from "@/components/ui/button-group";
 import { Button } from "@/components/ui/button";
 import { NavUserDesk } from "@/components/Home/nav-userDesk";
 import Image from "next/image";
+import LoginForm from "@/auth/login/LoginForm";
 
 const sora = Sora({
   variable: "--font-sora",
@@ -71,12 +72,10 @@ export default function RootLayout({
               {/* Right section */}
               <div className="flex items-center gap-4 md:gap-6 flex-wrap">
                 <Bell className="text-[#FDD3C6]" />
-                <div>
-                  <ButtonGroup className="hidden md:flex">
-                    <Button variant="outline">Sign In</Button>
-                    <Button variant="outline">Sign Up</Button>
-                  </ButtonGroup>
-                </div>
+                <ButtonGroup className="hidden md:flex">
+                  <LoginForm />
+                  <LoginForm />
+                </ButtonGroup>
                 <div className="hidden md:flex">
                   <NavUserDesk user={data.user}/>
                 </div>
