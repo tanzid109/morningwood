@@ -66,6 +66,7 @@ export default function RootLayout({
                     <Button variant="outline">Sign Up</Button>
                   </ButtonGroup>
                 </div>
+                
               </div>
             </header>
 

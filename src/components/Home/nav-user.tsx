@@ -1,16 +1,7 @@
 "use client"
-
-import {
-    BadgeCheck,
-    Bell,
-    CreditCard,
-    LogOut,
-    Sparkles,
-} from "lucide-react"
-
 import {
     Avatar,
-    // AvatarFallback,
+    AvatarFallback,
     AvatarImage,
 } from "@/components/ui/avatar"
 import {
@@ -18,7 +9,7 @@ import {
     DropdownMenuContent,
     DropdownMenuGroup,
     DropdownMenuItem,
-    // DropdownMenuLabel,
+    DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
@@ -28,15 +19,21 @@ import {
     SidebarMenuItem,
     useSidebar,
 } from "@/components/ui/sidebar"
+import { Button } from "../ui/button"
+import { HeartIcon, LogOut, LucideLayoutDashboard, Settings } from "lucide-react"
 
 export function NavUser({
     user,
 }: {
     user: {
+        channel:string
+        name: string
+        email: string
         avatar: string
     }
 }) {
     const { isMobile } = useSidebar()
+
 
     return (
         <SidebarMenu>
@@ -44,16 +41,17 @@ export function NavUser({
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <SidebarMenuButton
-                            size="lg"
-                            className="p-2 data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground "
+                            // size="sm"
+                            className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                         >
-                            <Avatar className="h-[72px] w-[72px] rounded-full">
-                                <AvatarImage src={user.avatar} alt={user.avatar} />
-                                {/* <AvatarFallback className="rounded-lg">CN</AvatarFallback> */}
+                            <Avatar className="h-8 w-8 rounded-lg grayscale">
+                                <AvatarImage src={user.avatar} alt={user.name} />
+                                <AvatarFallback className="rounded-lg">CN</AvatarFallback>
                             </Avatar>
                             <div className="grid flex-1 text-left text-sm leading-tight">
+                                <span className="truncate font-medium text-[#FDD3C6]">{user.name}</span>
+                                <span className="text-muted-foreground truncate text-xs">{user.email}</span>
                             </div>
-                            {/* <ChevronsUpDown className="ml-auto size-4" /> */}
                         </SidebarMenuButton>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent
@@ -62,43 +60,42 @@ export function NavUser({
                         align="end"
                         sideOffset={4}
                     >
-                        {/* <DropdownMenuLabel className="p-0 font-normal">
+                        <DropdownMenuLabel className="p-2 font-normal">
                             <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                                <Avatar className="h-8 w-8 rounded-lg">
+                                <Avatar className="h-16 w-16 rounded-full bg-amber-50">
                                     <AvatarImage src={user.avatar} alt={user.name} />
-                                    <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                                    <AvatarFallback className="rounded-lg">{user.name}</AvatarFallback>
                                 </Avatar>
                                 <div className="grid flex-1 text-left text-sm leading-tight">
-                                    <span className="truncate font-medium">{user.name}</span>
-                                    <span className="truncate text-xs">{user.email}</span>
+                                    <span className="truncate text-lg font-medium">{user.channel}</span>
+                                    <span className="truncate text-sm">{user.name}</span>
+                                    <span className="text-muted-foreground truncate text-xs">
+                                        {user.email}
+                                    </span>
+                                    <Button className="mt-2 rounded-full" variant="outline">
+                                        View Channel
+                                    </Button>
                                 </div>
                             </div>
-                        </DropdownMenuLabel> */}
+                        </DropdownMenuLabel>
                         <DropdownMenuSeparator />
                         <DropdownMenuGroup>
                             <DropdownMenuItem>
-                                <Sparkles />
-                                Upgrade to Pro
+                                <LucideLayoutDashboard />
+                                Creator Dashboard
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>
+                                <HeartIcon />
+                                Loved Streaming
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>
+                                <Settings />
+                                Account Settings
                             </DropdownMenuItem>
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />
-                        <DropdownMenuGroup>
-                            <DropdownMenuItem>
-                                <BadgeCheck />
-                                Account
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                                <CreditCard />
-                                Billing
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                                <Bell />
-                                Notifications
-                            </DropdownMenuItem>
-                        </DropdownMenuGroup>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem>
-                            <LogOut />
+                        <DropdownMenuItem className="text-red-500">
+                            <LogOut className="text-red-500" />
                             Log out
                         </DropdownMenuItem>
                     </DropdownMenuContent>
