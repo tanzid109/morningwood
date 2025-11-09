@@ -8,6 +8,8 @@ import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/in
 import { Bell, SearchIcon } from "lucide-react";
 import { ButtonGroup } from "@/components/ui/button-group";
 import { Button } from "@/components/ui/button";
+import { NavUserDesk } from "@/components/Home/nav-userDesk";
+import Image from "next/image";
 
 const sora = Sora({
   variable: "--font-sora",
@@ -24,27 +26,36 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+  const data = {
+    user: {
+      channel: "Channel Name",
+      name: "Moriningwood",
+      email: "sana_afrin03@gmail.com",
+      avatar: "/assets/logo.png",
+    },
+  }
+
   return (
     <html lang="en">
       <body className={`${sora.variable} antialiased`}>
         <SidebarProvider>
           <AppSidebar />
           <SidebarInset>
-            <header className="sticky bg-[#24120C] top-0 z-50 backdrop-blur-xl flex flex-wrap justify-between items-center p-5 gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-auto border-b border-[#5A392F]">
+            <header className="sticky bg-[#24120C] top-0 z-50 backdrop-blur-xl flex flex-wrap justify-between items-center p-2 gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-auto border-b border-[#5A392F]">
 
               {/* Left section */}
               <div className="flex items-center justify-center gap-3 px-4">
                 <SidebarTrigger className="-ml-1" />
                 {/* Logo placeholder */}
-                {/* <div className="relative mx-auto w-24 h-24">
+                <div className="relative mx-auto w-16 h-16">
                   <Image
                     src="/assets/logo.png"
                     alt="Logo"
                     fill
                     className="object-contain"
-                    sizes="96px"
                   />
-                </div> */}
+                </div>
               </div>
 
               {/* Search input */}
@@ -61,12 +72,14 @@ export default function RootLayout({
               <div className="flex items-center gap-4 md:gap-6 flex-wrap">
                 <Bell className="text-[#FDD3C6]" />
                 <div>
-                  <ButtonGroup>
+                  <ButtonGroup className="hidden md:flex">
                     <Button variant="outline">Sign In</Button>
                     <Button variant="outline">Sign Up</Button>
                   </ButtonGroup>
                 </div>
-                
+                <div className="hidden md:flex">
+                  <NavUserDesk user={data.user}/>
+                </div>
               </div>
             </header>
 

@@ -55,7 +55,7 @@ export default function FollowCard() {
 
                                     {/* Follow Button */}
                                     <Button className="text-[#24120C] hover:text-white rounded-full bg-[#FDD3C6]">
-                                        <Star className="w-4 h-4 mr-2 fill-current" />
+                                        <Star className="w-4 h-4" />
                                         Following
                                     </Button>
                                 </div>

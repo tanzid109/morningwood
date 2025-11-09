@@ -8,11 +8,12 @@ import {
     SidebarHeader,
     SidebarRail,
 } from "@/components/ui/sidebar"
-import { TeamSwitcher } from "./team-switcher"
 import { NavMain } from "./nav-main"
 import { usePathname } from "next/navigation"
 import { Compass, Heart, LayoutDashboardIcon, Radio, Star } from "lucide-react"
 import { NavUser } from "./nav-user"
+import { ButtonGroup } from "../ui/button-group"
+import { Button } from "../ui/button"
 
 const data = {
     user: {
@@ -63,12 +64,17 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     return (
         <Sidebar className="bg-[#24120C]" collapsible="icon"{...props}>
             <SidebarHeader>
-                <TeamSwitcher />
+                <div className="flex items-center justify-center mt-5">
+                    <ButtonGroup className="md:hidden flex">
+                        <Button variant="outline">Sign In</Button>
+                        <Button variant="outline">Sign Up</Button>
+                    </ButtonGroup>
+                </div>
             </SidebarHeader>
             <SidebarContent>
                 <NavMain items={navItems} />
             </SidebarContent>
-            <SidebarFooter>
+            <SidebarFooter className="md:hidden flex">
                 <NavUser user={data.user} />
             </SidebarFooter>
             <SidebarRail />
