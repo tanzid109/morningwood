@@ -21,7 +21,7 @@ import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { ChevronLeft, Eye, EyeOff, X } from "lucide-react";
+import { Eye, EyeOff, X } from "lucide-react";
 
 export default function LoginForm() {
     const router = useRouter();

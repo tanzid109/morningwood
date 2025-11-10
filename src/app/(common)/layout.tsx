@@ -72,7 +72,7 @@ export default function RootLayout({
               {/* Right section */}
               <div className="flex items-center gap-4 md:gap-6 flex-wrap">
                 <Bell className="text-[#FDD3C6]" />
-                <ButtonGroup>
+                <ButtonGroup className="hidden md:flex gap-1">
                   <Link href="/login"><Button variant="outline">Sign In</Button></Link>
                   <Link href="/register"><Button variant="outline">Sign Up</Button></Link>
                 </ButtonGroup>

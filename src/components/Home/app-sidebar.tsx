@@ -6,7 +6,6 @@ import {
     SidebarContent,
     SidebarFooter,
     SidebarHeader,
-    SidebarRail,
 } from "@/components/ui/sidebar"
 import { NavMain } from "./nav-main"
 import { usePathname } from "next/navigation"
@@ -14,6 +13,7 @@ import { Compass, Heart, LayoutDashboardIcon, Radio, Star } from "lucide-react"
 import { NavUser } from "./nav-user"
 import { ButtonGroup } from "../ui/button-group"
 import { Button } from "../ui/button"
+import Link from "next/link"
 
 const data = {
     user: {
@@ -62,12 +62,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
 
     return (
-        <Sidebar className="bg-[#24120C]" collapsible="icon"{...props}>
-            <SidebarHeader>
+        <Sidebar variant="inset" className="bg-[#24120C]" collapsible="icon"{...props}>
+            <SidebarHeader className="md:hidden">
                 <div className="flex items-center justify-center mt-5">
-                    <ButtonGroup className="md:hidden flex">
-                        <Button variant="outline">Sign In</Button>
-                        <Button variant="outline">Sign Up</Button>
+                    <ButtonGroup className="md:hidden flex gap-1">
+                            <Link href="/login"><Button variant="outline">Sign In</Button></Link>
+                            <Link href="/register"><Button variant="outline">Sign Up</Button></Link>
                     </ButtonGroup>
                 </div>
             </SidebarHeader>
@@ -77,7 +77,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarFooter className="md:hidden flex">
                 <NavUser user={data.user} />
             </SidebarFooter>
-            <SidebarRail />
         </Sidebar>
     )
 }

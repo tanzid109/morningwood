@@ -21,7 +21,7 @@ const ChannelHome = () => {
 
             {/* Profile Content */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 px-4 sm:px-6 pb-6">
-                <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 w-full md:w-auto">
+                <div className="flex flex-row justify-start items-start gap-4 w-full md:w-auto">
                     {/* Avatar */}
                     <div className="h-16 w-16 sm:h-20 sm:w-20 overflow-hidden rounded-full">
                         <Image
@@ -34,7 +34,7 @@ const ChannelHome = () => {
                     </div>
 
                     {/* Profile Info */}
-                    <div className="text-center sm:text-left">
+                    <div className="text-left sm:text-left">
                         <h2 className="text-xl sm:text-2xl font-semibold tracking-wide text-white">
                             Just Chatting
                         </h2>

@@ -19,8 +19,8 @@ import {
     SidebarMenuItem,
     useSidebar,
 } from "@/components/ui/sidebar"
-import { Button } from "../ui/button"
 import { HeartIcon, LogOut, LucideLayoutDashboard, Settings } from "lucide-react"
+import Link from "next/link"
 
 export function NavUser({
     user,
@@ -56,7 +56,7 @@ export function NavUser({
                     </DropdownMenuTrigger>
                     <DropdownMenuContent
                         className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
-                        side={isMobile ? "bottom" : "right"}
+                        side="bottom"
                         align="end"
                         sideOffset={4}
                     >
@@ -72,9 +72,9 @@ export function NavUser({
                                     <span className="text-muted-foreground truncate text-xs">
                                         {user.email}
                                     </span>
-                                    <Button className="mt-2 rounded-full" variant="outline">
+                                    <Link href="/channel" className="border border-[#5A392F] text-center p-2 mt-2 rounded-full">
                                         View Channel
-                                    </Button>
+                                    </Link>
                                 </div>
                             </div>
                         </DropdownMenuLabel>

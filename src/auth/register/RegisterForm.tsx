@@ -14,7 +14,7 @@ import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Spinner } from "@/components/ui/spinner";
 import Image from "next/image";
-import { ArrowLeft, X } from "lucide-react";
+import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { RegisterSchema } from "./RegisterValidation";
 import Link from "next/link";
