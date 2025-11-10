@@ -6,11 +6,11 @@ import { Toaster } from "@/components/ui/sonner";
 import { AppSidebar } from "@/components/Home/app-sidebar";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
 import { Bell, SearchIcon } from "lucide-react";
-import { ButtonGroup } from "@/components/ui/button-group";
-import { Button } from "@/components/ui/button";
 import { NavUserDesk } from "@/components/Home/nav-userDesk";
 import Image from "next/image";
-import LoginForm from "@/auth/login/LoginForm";
+import { ButtonGroup } from "@/components/ui/button-group";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const sora = Sora({
   variable: "--font-sora",
@@ -72,16 +72,15 @@ export default function RootLayout({
               {/* Right section */}
               <div className="flex items-center gap-4 md:gap-6 flex-wrap">
                 <Bell className="text-[#FDD3C6]" />
-                <ButtonGroup className="hidden md:flex">
-                  <LoginForm />
-                  <LoginForm />
+                <ButtonGroup>
+                  <Link href="/login"><Button variant="outline">Sign In</Button></Link>
+                  <Link href="/register"><Button variant="outline">Sign Up</Button></Link>
                 </ButtonGroup>
                 <div className="hidden md:flex">
-                  <NavUserDesk user={data.user}/>
+                  <NavUserDesk user={data.user} />
                 </div>
               </div>
             </header>
-
             <div className="px-4 md:px-8">
               {children}
             </div>

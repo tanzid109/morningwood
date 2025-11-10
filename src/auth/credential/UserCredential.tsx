@@ -1,13 +1,10 @@
 "use client";
-
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { useForm, FieldValues, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
-import { loginSchema } from "./LoginValidation";
 import {
     Form,
     FormField,
@@ -19,18 +16,22 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
 import { ChevronLeft, Eye, EyeOff, X } from "lucide-react";
+import { CredentialSchema } from "./CredentialValidation";
+import PasswordRequirement from "./PasswordRequirement";
 
-export default function LoginForm() {
+
+
+export default function CredentialForm() {
     const router = useRouter();
     const [showPassword, setShowPassword] = useState(false);
+    const [passwordValue, setPasswordValue] = useState("");
 
     const form = useForm({
-        resolver: zodResolver(loginSchema),
+        resolver: zodResolver(CredentialSchema),
         defaultValues: {
-            email: "",
+            channel: "",
+            user: "",
             password: "",
         },
     });
@@ -39,48 +40,74 @@ export default function LoginForm() {
 
     const onSubmit: SubmitHandler<FieldValues> = async (data) => {
         try {
-            console.log("Login Data:", data);
+            console.log("Credential Data:", data);
             await new Promise((resolve) => setTimeout(resolve, 2000));
             router.push("/");
         } catch (error) {
             console.error("Login error:", error);
         }
     };
-    const handleClose=()=>{
+
+    const handleClose = () => {
         router.push("/");
     }
+
+    const handleBack = () => router.back();
 
     return (
         <main className="flex justify-center items-center min-h-screen max-w-5xl mx-auto p-2">
             <div className="flex flex-col-reverse md:flex-row-reverse border rounded-lg overflow-hidden shadow-lg">
                 {/* Left Section - Form */}
-                <section className="relative flex flex-col justify-center items-center w-full md:w-1/2 bg-[#24120C] text-[#FDD3C6] p-10">
-                    {/* <div className="absolute top-3 left-3">
-                        <Button><ChevronLeft/></Button>
-                    </div> */}
-                    <div className="absolute top-3 right-3">
-                        <Button onClick={()=>handleClose()}><X/></Button>
+                <section className="relative flex flex-col justify-center items-start w-full md:w-1/2 bg-[#24120C] text-[#FDD3C6] p-10">
+                    <div className="absolute top-3 left-3">
+                        <Button
+                            onClick={handleBack}
+                            className="text-[#FDD3C6] hover:bg-[#3A211B]"
+                            aria-label="Go back"
+                        >
+                            <ChevronLeft size={20} />
+                        </Button>
                     </div>
-                    <h2 className="text-2xl font-semibold my-6">
-                        Sign in with your email or username
+                    <div className="absolute top-3 right-3">
+                        <Button onClick={() => handleClose()}><X /></Button>
+                    </div>
+                    <h2 className="text-2xl font-semibold my-4">
+                        User Credentials
                     </h2>
-
                     <Form {...form}>
                         <form
                             onSubmit={form.handleSubmit(onSubmit)}
                             className="space-y-5 w-full"
                         >
-                            {/* Email Field */}
+                            {/* Channel Field */}
                             <FormField
                                 control={form.control}
-                                name="email"
+                                name="channel"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Email Address</FormLabel>
+                                        <FormLabel>Channel Name</FormLabel>
                                         <FormControl>
                                             <Input
-                                                type="email"
-                                                placeholder="Enter your email"
+                                                type="text"
+                                                placeholder="Enter Your Channel Name"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            {/* user Field */}
+                            <FormField
+                                control={form.control}
+                                name="user"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>User Name</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                type="text"
+                                                placeholder="Enter Your Username"
                                                 {...field}
                                             />
                                         </FormControl>
@@ -102,42 +129,31 @@ export default function LoginForm() {
                                                     type={showPassword ? "text" : "password"}
                                                     placeholder="Enter your password"
                                                     {...field}
+                                                    onChange={(e) => {
+                                                        field.onChange(e);
+                                                        setPasswordValue(e.target.value);
+                                                    }}
                                                 />
                                             </FormControl>
                                             <Button
                                                 type="button"
                                                 variant="ghost"
-                                                size="icon"
                                                 onClick={() => setShowPassword((prev) => !prev)}
-                                                className="absolute right-2 top-1/2 -translate-y-1/2 p-1 hover:text-[#2489B0]"
+                                                className="absolute right-2 top-1/2 -translate-y-1/2 p-1 hover:text-[#7c5f56] text-[#A47E72]"
                                             >
                                                 {showPassword ? (
-                                                    <EyeOff size={18} />
+                                                    <EyeOff size={20} />
                                                 ) : (
-                                                    <Eye size={18} />
+                                                    <Eye size={20} />
                                                 )}
                                             </Button>
                                         </div>
                                         <FormMessage />
+                                        {/* Password Requirements */}
+                                        <PasswordRequirement password={passwordValue} />
                                     </FormItem>
                                 )}
                             />
-
-                            {/* Remember Me / Forgot Password */}
-                            <div className="flex items-center justify-between text-sm mt-4">
-                                <div className="flex items-center gap-2">
-                                    <Checkbox id="remember" />
-                                    <Label htmlFor="remember" className="font-semibold">
-                                        Remember me
-                                    </Label>
-                                </div>
-                                <Link
-                                    href="/forget"
-                                    className="text-[#FDD3C6] font-medium hover:underline"
-                                >
-                                    Forgot Password?
-                                </Link>
-                            </div>
 
                             {/* Submit Button */}
                             <Button
@@ -145,21 +161,10 @@ export default function LoginForm() {
                                 disabled={isSubmitting}
                                 className="w-full flex justify-center items-center gap-2"
                             >
-                                {isSubmitting ? <Spinner className="text-xl" /> : "Sign In"}
+                                {isSubmitting ? <Spinner className="text-xl" /> : "Complete Sign Up"}
                             </Button>
                         </form>
                     </Form>
-
-                    {/* Footer */}
-                    <p className="text-center mt-4 text-sm text-[#A47E72]">
-                        Don’t have an account?
-                        <Link
-                            href="/signup"
-                            className="text-[#FDD3C6] font-semibold ml-1 hover:underline"
-                        >
-                            Sign Up
-                        </Link>
-                    </p>
 
                     <p className="mt-4 text-sm tracking-wide text-[#A47E72] text-center">
                         By signing in, you agree to our{" "}
