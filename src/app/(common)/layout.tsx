@@ -5,7 +5,7 @@ import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/s
 import { Toaster } from "@/components/ui/sonner";
 import { AppSidebar } from "@/components/Home/app-sidebar";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
-import { Bell, SearchIcon } from "lucide-react";
+import { Bell, Radio, SearchIcon } from "lucide-react";
 import { NavUserDesk } from "@/components/Home/nav-userDesk";
 import Image from "next/image";
 import { ButtonGroup } from "@/components/ui/button-group";
@@ -71,6 +71,7 @@ export default function RootLayout({
 
               {/* Right section */}
               <div className="flex items-center gap-4 md:gap-6 flex-wrap">
+                <Link href="/stream"><Button className="bg-red-500 hidden md:flex"><Radio/> Go live</Button></Link>
                 <Bell className="text-[#FDD3C6]" />
                 <ButtonGroup className="hidden md:flex gap-1">
                   <Link href="/login"><Button variant="outline">Sign In</Button></Link>

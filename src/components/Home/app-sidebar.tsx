@@ -17,7 +17,7 @@ import Link from "next/link"
 
 const data = {
     user: {
-        channel:"Channel Name",
+        channel: "Channel Name",
         name: "Moriningwood",
         email: "sana_afrin03@gmail.com",
         avatar: "/assets/logo.png",
@@ -66,8 +66,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarHeader className="md:hidden">
                 <div className="flex items-center justify-center mt-5">
                     <ButtonGroup className="md:hidden flex gap-1">
-                            <Link href="/login"><Button variant="outline">Sign In</Button></Link>
-                            <Link href="/register"><Button variant="outline">Sign Up</Button></Link>
+                        <Link href="/login"><Button variant="outline">Sign In</Button></Link>
+                        <Link href="/register"><Button variant="outline">Sign Up</Button></Link>
+                        <Link href="/stream"><Button className="bg-red-500 "><Radio /> Go live</Button></Link>
                     </ButtonGroup>
                 </div>
             </SidebarHeader>
