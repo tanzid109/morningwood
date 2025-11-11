@@ -59,7 +59,7 @@ export default function RegisterForm() {
     }
 
     return (
-        <main className="flex justify-center items-center min-h-screen max-w-5xl mx-auto ">
+        <main className="flex justify-center items-center min-h-screen max-w-5xl mx-auto p-2">
             <div className="md:h-[60vh] flex flex-col-reverse md:flex-row-reverse border rounded-lg overflow-hidden shadow-lg">
 
                 {/* Left Section - Form */}

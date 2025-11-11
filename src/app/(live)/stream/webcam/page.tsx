@@ -1,10 +1,10 @@
-import LiveStream from '@/Pages/Streams/LiveStream';
+import WebCam from '@/Pages/LiveStream/WebCam';
 import React from 'react';
 
 const page = () => {
     return (
         <div>
-            <LiveStream />
+            <WebCam />
         </div>
     );
 };

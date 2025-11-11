@@ -1,10 +1,10 @@
-import LiveStream from '@/Pages/Streams/LiveStream';
+import LiveStream from '@/Pages/LiveStream/LiveStream';
 import React from 'react';
 
 const page = () => {
     return (
         <div>
-            <LiveStream />
+            <LiveStream/>
         </div>
     );
 };
