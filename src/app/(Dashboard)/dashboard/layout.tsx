@@ -49,7 +49,7 @@ export default function RootLayout({
                 <SidebarTrigger className="-ml-1" />
                 {/* Logo placeholder */}
                 <div className="relative mx-auto w-16 h-16">
-                  <Link href="/stream">
+                  <Link href="/">
                     <Image
                       src="/assets/logo.png"
                       alt="Logo"

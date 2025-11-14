@@ -80,10 +80,12 @@ export function NavUser({
                         </DropdownMenuLabel>
                         <DropdownMenuSeparator />
                         <DropdownMenuGroup>
-                            <DropdownMenuItem>
-                                <LucideLayoutDashboard />
-                                Creator Dashboard
-                            </DropdownMenuItem>
+                            <Link href="/dashboard">
+                                <DropdownMenuItem>
+                                    <LucideLayoutDashboard />
+                                    Creator Dashboard
+                                </DropdownMenuItem>
+                            </Link>
                             <DropdownMenuItem>
                                 <HeartIcon />
                                 Loved Streaming
