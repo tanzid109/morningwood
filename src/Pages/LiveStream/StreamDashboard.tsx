@@ -36,7 +36,7 @@ const StreamingDashboard = () => {
                                 <div>
                                     <p className="text-xs text-gray-400 uppercase tracking-wider mb-2">Title</p>
                                     <h2 className="text-xl font-semibold text-white flex items-center gap-2">
-                                        Rank Push to Immortal – Let's Go Full Tryhard 🔥
+                                        Rank Push to Immortal – Let&apos;s Go Full Tryhard 🔥
                                     </h2>
                                 </div>
 

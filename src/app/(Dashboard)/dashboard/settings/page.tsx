@@ -1,9 +1,10 @@
+import SettingsHome from '@/Pages/Dashboard/Settings/SettingsHome';
 import React from 'react';
 
 const page = () => {
     return (
         <div>
-            settings
+            <SettingsHome/>
         </div>
     );
 };
