@@ -264,7 +264,7 @@ export default function StreamedVideoTable() {
 
     return (
         <div>
-            <h2 className="text-[#2D2D2D] text-4xl font-semibold my-3 px-2">Catalog Management</h2>
+            <h2 className="text-[#FDD3C6] text-4xl font-semibold my-3 px-2">Catalog Management</h2>
 
             {/* Search & Filters */}
             <div className="py-6 flex flex-col md:flex-row justify-between items-center my-6 gap-4">

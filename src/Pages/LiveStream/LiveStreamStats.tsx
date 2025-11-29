@@ -37,89 +37,60 @@ const LiveStreamStats: React.FC = () => {
     };
 
     const formatNumber = (num: number): string => {
-        if (num >= 1000000) {
-            return `${(num / 1000000).toFixed(1)}M`;
-        }
-        if (num >= 1000) {
-            return `${(num / 1000).toFixed(1)}K`;
-        }
+        if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`;
+        if (num >= 1000) return `${(num / 1000).toFixed(1)}K`;
         return num.toString();
-    };
-
-    const handleGoLive = () => {
-        setIsLive(!isLive);
-        if (!isLive) {
-            setStats({ duration: 0, watching: 0, liked: 0 });
-        }
     };
 
     return (
         <div className="w-full mx-auto mb-4">
-            <div className="bg-[#36190F] rounded-2xl p-6">
-                <div className="flex items-center justify-between">
+            <div className="bg-[#36190F] rounded-2xl p-4 sm:p-6">
+
+                {/* Responsive Flex Wrapper */}
+                <div className="flex flex-wrap items-center justify-between gap-5">
+
                     {/* Duration */}
                     <div className="flex flex-col">
-                        <div className="text-white text-2xl font-bold font-mono">
+                        <div className="text-white text-xl sm:text-2xl font-bold font-mono">
                             {formatDuration(stats.duration)}
                         </div>
-                        <div className="text-[#FDD3C6] text-sm font-medium mt-1">
+                        <div className="text-[#FDD3C6] text-xs sm:text-sm font-medium mt-1">
                             Live session
                         </div>
                     </div>
 
-                    {/* Divider */}
-                    <div className="h-12 w-px bg-[#FDD3C6]" />
+                    {/* Vertical Divider (Hidden on Mobile) */}
+                    <div className="hidden sm:block h-12 w-px bg-[#FDD3C6]" />
 
                     {/* Watching */}
-                    <div className="flex flex-col">
-                        <div className="text-white text-2xl font-bold">
-                            {formatNumber(stats.watching)} K
+                    <div className="flex flex-col border-t sm:border-none pt-3 sm:pt-0 w-full sm:w-auto">
+                        <div className="text-white text-xl sm:text-2xl font-bold">
+                            {formatNumber(stats.watching)}
                         </div>
-                        <div className="text-[#FDD3C6] text-sm font-medium mt-1">
+                        <div className="text-[#FDD3C6] text-xs sm:text-sm font-medium mt-1">
                             Watching
                         </div>
                     </div>
 
-                    {/* Divider */}
-                    <div className="h-12 w-px bg-[#FDD3C6]" />
+                    {/* Vertical Divider */}
+                    <div className="hidden sm:block h-12 w-px bg-[#FDD3C6]" />
 
                     {/* Liked */}
-                    <div className="flex flex-col">
-                        <div className="text-white text-2xl font-bold">
+                    <div className="flex flex-col border-t sm:border-none pt-3 sm:pt-0 w-full sm:w-auto">
+                        <div className="text-white text-xl sm:text-2xl font-bold">
                             {stats.liked.toFixed(1)}
                         </div>
-                        <div className="text-[#FDD3C6] text-sm font-medium mt-1">
+                        <div className="text-[#FDD3C6] text-xs sm:text-sm font-medium mt-1">
                             Liked
                         </div>
                     </div>
 
-                    {/* Go Live Button */}
-                    <StreamCreationForm/>
+                    {/* StreamCreationForm Button - Moves Responsively */}
+                    <div className="w-full sm:w-auto flex justify-end sm:justify-center mt-2 sm:mt-0">
+                        <StreamCreationForm />
+                    </div>
                 </div>
             </div>
-
-            {/* Demo Controls
-            <div className="mt-6 p-4 bg-gray-100 rounded-lg">
-                <h3 className="text-sm font-semibold mb-3 text-gray-700">Demo Controls</h3>
-                <div className="flex gap-3">
-                    <Button
-                        onClick={() => setStats(prev => ({ ...prev, watching: prev.watching + Math.floor(Math.random() * 100) }))}
-                        variant="outline"
-                        size="sm"
-                        disabled={!isLive}
-                    >
-                        + Viewers
-                    </Button>
-                    <Button
-                        onClick={() => setStats(prev => ({ ...prev, liked: prev.liked + 0.1 }))}
-                        variant="outline"
-                        size="sm"
-                        disabled={!isLive}
-                    >
-                        + Likes
-                    </Button>
-                </div>
-            </div> */}
         </div>
     );
 };
