@@ -22,6 +22,8 @@ import { Spinner } from "@/components/ui/spinner";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Eye, EyeOff, X } from "lucide-react";
+import { loginUser } from "@/Server/Auth/Index";
+import { toast } from "sonner";
 
 export default function LoginForm() {
     const router = useRouter();
@@ -39,11 +41,26 @@ export default function LoginForm() {
 
     const onSubmit: SubmitHandler<FieldValues> = async (data) => {
         try {
-            console.log("Login Data:", data);
-            await new Promise((resolve) => setTimeout(resolve, 2000));
-            router.push("/");
+            const LoginData = {
+                email: data.email,
+                password: data.password,
+            };
+
+            console.log("Submitting login data:", LoginData);
+
+            const res = await loginUser(LoginData);
+
+            console.log(" Login response received:", res);
+
+            if (res?.success) {
+                toast.success(res.message || "Login successful!");
+                router.push("/");
+            } else {
+                toast.error(res?.message || "Login failed");
+            }
         } catch (error) {
-            console.error("Login error:", error);
+            console.error("💥 Error during login:", error);
+            toast.error("An error occurred during login");
         }
     };
     const handleClose=()=>{

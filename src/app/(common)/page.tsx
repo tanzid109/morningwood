@@ -6,10 +6,10 @@ import LiveStream from '@/Pages/Live/LiveStream';
 const Home = () => {
     return (
         <div>
-            <LiveStream/>
-            <LatestStreams/>
-            <GamingStreams/>
-            <IRL/>
+            <LiveStream />
+            <LatestStreams />
+            <GamingStreams />
+            <IRL />
         </div>
     );
 };

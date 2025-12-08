@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { useForm, FieldValues, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,12 +19,15 @@ import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { Eye, EyeOff, X } from "lucide-react";
 import { resetSchema } from "./ResetValidation";
+import { resetUserPassword } from "@/Server/Auth/Index";
+import { toast } from "sonner";
 
 export default function ResetPasswordForm() {
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const token = searchParams?.get('token')
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
     const form = useForm({
         resolver: zodResolver(resetSchema),
         defaultValues: {
@@ -34,16 +37,25 @@ export default function ResetPasswordForm() {
     });
 
     const { watch, formState: { isSubmitting } } = form;
+    // eslint-disable-next-line react-hooks/incompatible-library
     const password = watch("password");
     const passwordConfirm = watch("Cpassword");
 
     const onSubmit: SubmitHandler<FieldValues> = async (data) => {
         try {
-            console.log("Reset Password Data:", data);
-            await new Promise((resolve) => setTimeout(resolve, 2000));
-            router.push("/login");
+            const res = await resetUserPassword({
+                resetToken: token,
+                newPassword: data.password,
+                confirmPassword: data.Cpassword,
+            });
+            console.log(res);
+            toast.success(res.message);
+            if (res.success) {
+                router.push("/login");
+            }
         } catch (error) {
-            console.error("Reset password error:", error);
+            console.error(error);
+            toast.error("Failed to reset password. Please try again.");
         }
     };
 

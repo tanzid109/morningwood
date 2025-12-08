@@ -120,7 +120,7 @@ export const resendOtp = async (otpResend: FieldValues) => {
 
 export const loginUser = async (LoginData: FieldValues) => {
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/auth/login`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/v1/auth/login`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -156,7 +156,7 @@ export const loginUser = async (LoginData: FieldValues) => {
 
 export const forgotUser = async (email: FieldValues) => {
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/auth/forget-password`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/v1/auth/forgot-password`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -172,15 +172,40 @@ export const forgotUser = async (email: FieldValues) => {
     }
 }
 
-export const resetUserPassword = async (passwordData: FieldValues) => {
-    const { resettoken, ...rest } = passwordData;
+export const verifyOtp = async (otpData: FieldValues) => {
+    const { resetToken, ...rest } = otpData;
 
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/auth/reset-password`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/v1/auth/verify-forgot-password-otp`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                resettoken: `${resettoken}`,
+                "x-reset-token": resetToken,
+            },
+            body: JSON.stringify(rest),
+            cache: "no-store",
+        })
+
+        const data = await res.json()
+        if (data.success) {
+            (await cookies()).set("accessToken", data?.data?.accessToken, getSecureCookieOptions())
+        }
+        return data
+    } catch (error) {
+        console.error("Error verifying OTP:", error)
+        throw error
+    }
+}
+
+export const resetUserPassword = async (passwordData: FieldValues) => {
+    const { resetToken, ...rest } = passwordData;
+
+    try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/v1/auth/reset-password`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "x-reset-token": resetToken,
             },
             body: JSON.stringify(rest),
             cache: "no-store",
@@ -194,8 +219,6 @@ export const resetUserPassword = async (passwordData: FieldValues) => {
         throw error;
     }
 };
-
-
 
 export const getCurrentUser = async () => {
     const accessToken = (await cookies()).get("accessToken")?.value;
