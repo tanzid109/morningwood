@@ -18,6 +18,8 @@ import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { RegisterSchema } from "./RegisterValidation";
 import Link from "next/link";
+import { toast } from "sonner";
+import { createUser } from "@/Server/Auth/Index";
 
 export default function RegisterForm() {
     const router = useRouter()
@@ -34,24 +36,41 @@ export default function RegisterForm() {
 
     const onSubmit: SubmitHandler<FieldValues> = async (data) => {
         try {
-            const loginData = {
+            const registrationData = {
                 email: data.email,
-                password: data.password,
             };
 
-            console.log("Login Data:", loginData);
+            const res = await createUser(registrationData);
+            console.log("Server Response:", res);
 
+            if (res?.success) {
+                router.push(`/otp?token=${res.data.signupToken}`);
+                toast.success(res.message);
+            // } else if (res?.statusCode === 409 && res?.message === "Email already exists") {
+                // ✅ Handle email already exists - resend OTP and redirect
+                // toast.info("Email already registered. Sending verification code...");
 
-            // // simulate API delay
-            await new Promise((resolve) => setTimeout(resolve, 2000));
+                // try {
+                //     const resendRes = await resendOtp({ email: data.email });
 
-            // // redirect on success
-
+                //     if (resendRes?.success) {
+                //         // Redirect to OTP page
+                //         router.push(`/otp?email=${encodeURIComponent(data.email)}`);
+                //         toast.info("Email already registered. Verification code sent! Please check your email.");
+                //     } else {
+                //         toast.error(resendRes?.message || "Failed to resend verification code");
+                //     }
+                // } catch (resendError) {
+                //     console.error("Error resending OTP:", resendError);
+                //     toast.error("Failed to resend verification code");
+                // }
+            } else {
+                // Handle other errors
+                toast.error(res?.message || "Registration failed");
+            }
         } catch (error) {
-            console.error(error);
-        }
-        finally {
-            router.push("/otp");
+            console.error("Error during registration:", error);
+            toast.error("An error occurred during registration");
         }
     };
     const handleClose = () => {

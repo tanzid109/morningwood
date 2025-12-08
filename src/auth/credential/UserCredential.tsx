@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { useForm, FieldValues, SubmitHandler } from "react-hook-form";
@@ -19,8 +19,8 @@ import { Spinner } from "@/components/ui/spinner";
 import { ChevronLeft, Eye, EyeOff, X } from "lucide-react";
 import { CredentialSchema } from "./CredentialValidation";
 import PasswordRequirement from "./PasswordRequirement";
-
-
+import { toast } from "sonner";
+import { getCredential } from "@/Server/Auth/Index";
 
 export default function CredentialForm() {
     const router = useRouter();
@@ -36,13 +36,25 @@ export default function CredentialForm() {
         },
     });
 
+    const searchParams = useSearchParams();
+    const signupToken = searchParams?.get('token') || null;
     const { formState: { isSubmitting } } = form;
 
     const onSubmit: SubmitHandler<FieldValues> = async (data) => {
         try {
-            console.log("Credential Data:", data);
-            await new Promise((resolve) => setTimeout(resolve, 2000));
-            router.push("/");
+            const registrationData = {
+                username: data.user,
+                channelName: data.channel,
+                password: data.password,
+                signupToken: signupToken,
+            };
+            console.log(registrationData);
+            const res = await getCredential(registrationData);
+            console.log("Server Response:", res);
+            if (res?.success) {
+                router.push(`/`);
+                toast.success(res.message);
+            }
         } catch (error) {
             console.error("Login error:", error);
         }

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Sora } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "@/components/ui/sonner";
 
 const sora = Sora({
   variable: "--font-sora",
@@ -25,6 +26,7 @@ export default function RootLayout({
         <main>
           {children}
         </main>
+        <Toaster position="top-center"/>
       </body>
     </html>
   );
