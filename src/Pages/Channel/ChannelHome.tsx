@@ -52,7 +52,7 @@ const ChannelHome = () => {
                 </div>
 
                 <Link
-                    href="/customize_channel"
+                    href="/channel/customize-channel"
                     className="bg-[#36190F] text-white text-sm sm:text-base text-center px-4 py-2 mt-2 md:mt-0 rounded-full w-full sm:w-auto"
                 >
                     Customize channel

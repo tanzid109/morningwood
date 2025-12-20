@@ -3,10 +3,13 @@ import { createContext, Dispatch, SetStateAction, useContext, useEffect, useStat
 
 export interface IUser {
     email: string;
+    username?: string;
+    channelName?: string;
+    image: string;
     exp?: number;
     iat?: number;
     id: string;
-    role: "ARTIST" | "INVESTOR"; 
+    role: "USER"; 
 }
 
 interface IUserProviderValues {

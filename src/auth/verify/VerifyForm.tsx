@@ -36,8 +36,7 @@ export default function VerifyForm() {
         try {
             const res = await verifyOtp({
                 otp: data.otp,
-                resetToken: resetToken,
-                
+                resetToken: resetToken,  
             });
             console.log(res);
             if (res.success) {
