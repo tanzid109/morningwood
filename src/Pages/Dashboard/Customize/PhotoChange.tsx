@@ -1,16 +1,23 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Upload, X } from 'lucide-react';
+import { Upload, X, Loader2 } from 'lucide-react';
 import Image from 'next/image';
 import { Separator } from '@/components/ui/separator';
+import { toast } from 'sonner';
+import { ChannelPhotoCustomize } from '@/Server/Customize_Channel';
 
 export default function PhotoChange() {
     const [profilePreview, setProfilePreview] = useState<string | null>(null);
     const [profileError, setProfileError] = useState<string>('');
+    const [profileFile, setProfileFile] = useState<File | null>(null);
 
     const [coverPreview, setCoverPreview] = useState<string | null>(null);
     const [coverError, setCoverError] = useState<string>('');
+    const [coverFile, setCoverFile] = useState<File | null>(null);
+
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -29,6 +36,8 @@ export default function PhotoChange() {
             setProfileError('File size must be under 4 MB');
             return;
         }
+
+        setProfileFile(file);
 
         // Create preview
         const reader = new FileReader();
@@ -56,6 +65,8 @@ export default function PhotoChange() {
             return;
         }
 
+        setCoverFile(file);
+
         // Create preview
         const reader = new FileReader();
         reader.onloadend = () => {
@@ -67,6 +78,7 @@ export default function PhotoChange() {
     const handleRemoveProfile = () => {
         setProfilePreview(null);
         setProfileError('');
+        setProfileFile(null);
         const input = document.getElementById('profile-upload') as HTMLInputElement;
         if (input) input.value = '';
     };
@@ -74,8 +86,53 @@ export default function PhotoChange() {
     const handleRemoveCover = () => {
         setCoverPreview(null);
         setCoverError('');
+        setCoverFile(null);
         const input = document.getElementById('cover-upload') as HTMLInputElement;
         if (input) input.value = '';
+    };
+
+    const handleSubmit = async () => {
+        if (!profileFile && !coverFile) {
+            toast.error("Please select at least one photo to upload");
+            return;
+        }
+
+        if (profileError || coverError) {
+            toast.error("Please fix the errors before submitting");
+            return;
+        }
+
+        setIsSubmitting(true);
+
+        try {
+            // Create FormData and append files
+            const formData = new FormData();
+
+            if (profileFile) {
+                formData.append('profilePhoto', profileFile);
+            }
+
+            if (coverFile) {
+                formData.append('coverPhoto', coverFile);
+            }
+
+            // Call the server action
+            const result = await ChannelPhotoCustomize(formData);
+
+            if (result.success) {
+                toast.success(result.message || "Photos updated successfully");
+                handleRemoveProfile();
+                handleRemoveCover();
+            } else {
+                toast.error(result.message || "Failed to update photos");
+                console.error("Upload failed:", result);
+            }
+        } catch (error: any) {
+            console.error("Upload error:", error);
+            toast.error(error.message || "An unexpected error occurred");
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -95,6 +152,8 @@ export default function PhotoChange() {
                                     <Image
                                         src={profilePreview}
                                         alt="Profile preview"
+                                        width={128}
+                                        height={128}
                                         className="w-full h-full object-cover"
                                     />
                                 ) : (
@@ -105,6 +164,7 @@ export default function PhotoChange() {
                                 <button
                                     onClick={handleRemoveProfile}
                                     className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
+                                    type="button"
                                 >
                                     <X className="w-4 h-4" />
                                 </button>
@@ -119,22 +179,22 @@ export default function PhotoChange() {
                                 Recommended size: 120×120 px, under 4 MB
                             </p>
 
-                            <label htmlFor="profile-upload">
-                                <Button
-                                    type="button"
-                                    className="bg-neutral-700 hover:bg-neutral-600 text-white"
-                                    onClick={() => document.getElementById('profile-upload')?.click()}
-                                >
-                                    <Upload className="w-4 h-4 mr-2" />
-                                    Upload Profile Photo
-                                </Button>
-                            </label>
+                            <Button
+                                type="button"
+                                className="bg-neutral-700 hover:bg-neutral-600 text-white"
+                                onClick={() => document.getElementById('profile-upload')?.click()}
+                                disabled={isSubmitting}
+                            >
+                                <Upload className="w-4 h-4 mr-2" />
+                                Upload Profile Photo
+                            </Button>
                             <input
                                 id="profile-upload"
                                 type="file"
                                 accept="image/jpeg,image/png"
                                 onChange={handleProfileChange}
                                 className="hidden"
+                                disabled={isSubmitting}
                             />
 
                             {profileError && (
@@ -144,7 +204,7 @@ export default function PhotoChange() {
                     </div>
                 </div>
 
-                <Separator/>
+                <Separator />
 
                 {/* Cover Photo Section */}
                 <div className="w-full space-y-4">
@@ -160,6 +220,8 @@ export default function PhotoChange() {
                                     <Image
                                         src={coverPreview}
                                         alt="Cover preview"
+                                        width={1130}
+                                        height={220}
                                         className="w-full h-full object-cover"
                                     />
                                 ) : (
@@ -170,6 +232,7 @@ export default function PhotoChange() {
                                 <button
                                     onClick={handleRemoveCover}
                                     className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
+                                    type="button"
                                 >
                                     <X className="w-4 h-4" />
                                 </button>
@@ -183,28 +246,46 @@ export default function PhotoChange() {
                             Recommended size: 1130×220 px, under 6 MB
                         </p>
 
-                        <label htmlFor="cover-upload">
-                            <Button
-                                type="button"
-                                className="bg-neutral-700 hover:bg-neutral-600 text-white"
-                                onClick={() => document.getElementById('cover-upload')?.click()}
-                            >
-                                <Upload className="w-4 h-4 mr-2" />
-                                Upload Cover Photo
-                            </Button>
-                        </label>
+                        <Button
+                            type="button"
+                            className="bg-neutral-700 hover:bg-neutral-600 text-white"
+                            onClick={() => document.getElementById('cover-upload')?.click()}
+                            disabled={isSubmitting}
+                        >
+                            <Upload className="w-4 h-4 mr-2" />
+                            Upload Cover Photo
+                        </Button>
                         <input
                             id="cover-upload"
                             type="file"
                             accept="image/jpeg,image/png"
                             onChange={handleCoverChange}
                             className="hidden"
+                            disabled={isSubmitting}
                         />
 
                         {coverError && (
                             <p className="text-red-400 text-sm mt-2">{coverError}</p>
                         )}
                     </div>
+                </div>
+
+                {/* Submit Button */}
+                <div className="flex justify-end">
+                    <Button
+                        variant="destructive"
+                        onClick={handleSubmit}
+                        disabled={isSubmitting || (!profileFile && !coverFile)}
+                    >
+                        {isSubmitting ? (
+                            <>
+                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                Saving...
+                            </>
+                        ) : (
+                            'Save Changes'
+                        )}
+                    </Button>
                 </div>
             </div>
         </main>

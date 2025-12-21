@@ -23,7 +23,6 @@ const LoggedUser = () => {
     const [isLoggingOut, setIsLoggingOut] = useState(false);
     const router = useRouter();
     const { user, setUser } = useUser();
-    console.log(user);
 
     const handleLogout = async () => {
         try {

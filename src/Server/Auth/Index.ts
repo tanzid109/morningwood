@@ -244,6 +244,37 @@ export const getCurrentUser = async () => {
     }
 }
 
+export const changeUserPassword = async (passwordData: FieldValues) => {
+    try {
+        const cookieStore = await cookies()
+        const accessToken = cookieStore.get("accessToken")?.value
+
+        if (!accessToken) {
+            console.error("No access token found");
+            return {
+                success: false,
+                message: "No access token found. Please log in again."
+            }
+        }
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/v1/auth/change-password`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${accessToken}`,
+            },
+            body: JSON.stringify(passwordData),
+            cache: "no-store",
+        });
+
+        const data = await res.json();
+        return data;
+
+    } catch (error) {
+        console.error("Error resetting password:", error);
+        throw error;
+    }
+};
+
 // logout function
 export const logoutUser = async () => {
     try {

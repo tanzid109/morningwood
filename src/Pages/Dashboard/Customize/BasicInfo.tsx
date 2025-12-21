@@ -1,5 +1,6 @@
 "use client";
-import { useForm, FieldValues, SubmitHandler } from "react-hook-form";
+
+import { useForm, SubmitHandler } from "react-hook-form";
 import {
     Form,
     FormField,
@@ -12,14 +13,42 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
+import { ChannelInfoCustomize } from "@/Server/Customize_Channel";
+import { toast } from "sonner";
+
+interface ChannelFormValues {
+    channelName: string;
+    userName: string;
+    description: string;
+}
+
 export default function BasicInfo() {
-    const form = useForm();
-    const { formState: { isSubmitting } } = form;
-    const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+    const form = useForm<ChannelFormValues>({
+        defaultValues: {
+            channelName: "",
+            userName: "",
+            description: "",
+        },
+    });
+
+    const {
+        formState: { isSubmitting },
+        reset,
+    } = form;
+
+    const onSubmit: SubmitHandler<ChannelFormValues> = async (data) => {
         try {
-            console.log(data);
+            const res = await ChannelInfoCustomize(data);
+
+            if (res?.success) {
+                toast.success(res.message || "Channel info updated");
+                reset(); // optional
+            } else {
+                toast.error(res?.message || "Something went wrong");
+            }
         } catch (error) {
-            console.error("Login error:", error);
+            console.error("Channel update error:", error);
+            toast.error("Failed to update channel info");
         }
     };
 
@@ -30,16 +59,16 @@ export default function BasicInfo() {
                     onSubmit={form.handleSubmit(onSubmit)}
                     className="space-y-5 w-full"
                 >
-                    {/* channel Field */}
+                    {/* Channel Name */}
                     <FormField
                         control={form.control}
                         name="channelName"
+                        rules={{ required: "Channel name is required" }}
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Channel Name</FormLabel>
                                 <FormControl>
                                     <Input
-                                        type="text"
                                         placeholder="Channel Name"
                                         {...field}
                                     />
@@ -48,16 +77,17 @@ export default function BasicInfo() {
                             </FormItem>
                         )}
                     />
-                    {/* user field */}
+
+                    {/* User Name */}
                     <FormField
                         control={form.control}
                         name="userName"
+                        rules={{ required: "User name is required" }}
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>User Name</FormLabel>
                                 <FormControl>
                                     <Input
-                                        type="text"
                                         placeholder="User Name"
                                         {...field}
                                     />
@@ -66,10 +96,17 @@ export default function BasicInfo() {
                             </FormItem>
                         )}
                     />
+
                     {/* Description */}
                     <FormField
                         control={form.control}
                         name="description"
+                        rules={{
+                            maxLength: {
+                                value: 300,
+                                message: "Description must be under 300 characters",
+                            },
+                        }}
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Description</FormLabel>
@@ -83,13 +120,14 @@ export default function BasicInfo() {
                             </FormItem>
                         )}
                     />
-                    {/* Submit Button */}
+
+                    {/* Submit */}
                     <Button
                         type="submit"
                         disabled={isSubmitting}
-                        className="flex justify-center items-center gap-2"
+                        className="flex items-center gap-2"
                     >
-                        {isSubmitting ? <Spinner className="text-xl" /> : "Save Changes"}
+                        {isSubmitting ? <Spinner /> : "Save Changes"}
                     </Button>
                 </form>
             </Form>

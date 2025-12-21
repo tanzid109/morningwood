@@ -5,13 +5,18 @@ import Link from "next/link";
 import ChannelHomeData from "./ChannelHomeData";
 import ChannelVideos from "./ChannelVideos";
 import ChannelAbout from "./ChannelAbout";
+import { getChannelDetails } from "@/Server/Channel";
 
-const ChannelHome = () => {
+const ChannelHome = async () => {
+
+    const res = await getChannelDetails();
+    const channelDetails = res.data;
+    console.log(channelDetails);
     return (
         <main>
             <header className="h-40 sm:h-44 md:h-56 lg:h-64 w-full rounded-2xl my-5 overflow-hidden">
                 <Image
-                    src="https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=1200&h=400&fit=crop"
+                    src={channelDetails.coverPhoto || "/assets/channel-cover.jpg"}
                     alt="Concert crowd with hands raised"
                     className="w-full h-full object-cover"
                     height="200"
@@ -25,7 +30,7 @@ const ChannelHome = () => {
                     {/* Avatar */}
                     <div className="h-16 w-16 sm:h-20 sm:w-20 overflow-hidden rounded-full">
                         <Image
-                            src="/assets/category1.png"
+                            src={channelDetails.profilePhoto || "/assets/channel-cover.jpg"}
                             alt="avatar"
                             width={80}
                             height={80}
@@ -36,16 +41,16 @@ const ChannelHome = () => {
                     {/* Profile Info */}
                     <div className="text-left sm:text-left">
                         <h2 className="text-xl sm:text-2xl font-semibold tracking-wide text-white">
-                            Just Chatting
+                            {channelDetails.channelName}
                         </h2>
-                        <p className="text-sm sm:text-base tracking-wide text-zinc-300">User Name</p>
+                        <p className="text-sm sm:text-base tracking-wide text-zinc-300">{channelDetails.username}</p>
 
                         <div className="mt-1 flex flex-wrap justify-center sm:justify-start items-center gap-3 text-xs sm:text-sm text-zinc-400">
                             <span>
-                                <span className="font-semibold text-white">4.86M</span> followers
+                                <span className="font-semibold text-white">{channelDetails.followerCount}</span> followers
                             </span>
                             <span>
-                                <span className="font-semibold text-white">486</span> videos
+                                <span className="font-semibold text-white">{channelDetails.creatorStats.totalStreams}</span> Streams
                             </span>
                         </div>
                     </div>
@@ -65,12 +70,11 @@ const ChannelHome = () => {
                     <TabsTrigger value="videos">Videos</TabsTrigger>
                     <TabsTrigger value="about">About</TabsTrigger>
                 </TabsList>
-                <Separator/>
-                <TabsContent value="home"><ChannelHomeData/></TabsContent>
-                <TabsContent value="videos"><ChannelVideos/></TabsContent>
-                <TabsContent value="about"><ChannelAbout/></TabsContent>
+                <Separator />
+                <TabsContent value="home"><ChannelHomeData /></TabsContent>
+                <TabsContent value="videos"><ChannelVideos /></TabsContent>
+                <TabsContent value="about"><ChannelAbout /></TabsContent>
             </Tabs>
-
         </main>
     );
 };

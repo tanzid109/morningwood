@@ -1,5 +1,4 @@
 'use client';
-import { useState, useEffect } from 'react';
 import {
     Menu,
     Send,
@@ -10,38 +9,11 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Card } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import LiveStreamStats from './LiveStreamStats';
-
-interface ChatMessage {
-    id: number;
-    username: string;
-    message: string;
-    type: 'hearts' | 'text' | 'emotes';
-}
+import LiveForm from './Live';
 
 export default function WebCam() {
-    const [chatMessages, setChatMessages] = useState<ChatMessage[]>([
-        { id: 1, username: 'hemaya7574', message: '❤️❤️❤️❤️❤️', type: 'hearts' },
-        { id: 2, username: 'hemaya7574', message: '💀💀💀💀💀💀', type: 'emotes' },
-        { id: 3, username: 'hemaya7574', message: '❤️❤️❤️', type: 'hearts' },
-        { id: 4, username: 'hemaya7574', message: '💀💀💀💀💀', type: 'emotes' },
-    ]);
-
-    useEffect(() => {
-        const interval = setInterval(() => {
-            const newMessage: ChatMessage = {
-                id: Date.now(),
-                username: 'hemaya7574',
-                message: Math.random() > 0.5 ? '❤️❤️❤️❤️❤️' : '💀💀💀💀💀💀',
-                type: Math.random() > 0.5 ? 'hearts' : 'emotes',
-            };
-            setChatMessages((prev) => [...prev.slice(-7), newMessage]);
-        }, 3000);
-
-        return () => clearInterval(interval);
-    }, []);
 
     return (
         <div className="py-5 text-white">
@@ -77,7 +49,7 @@ export default function WebCam() {
                 </div>
 
                 {/* Chat Section */}
-                <div className="border border-[#4C2C22] rounded-2xl p-4 w-full lg:w-[380px] shrink-0">
+                <div className="border border-[#4C2C22] rounded-2xl p-4 w-full lg:w-[380px] shrink-0 h-fit">
                     <div className="flex items-center justify-between mb-4">
                         <h3 className="font-semibold flex items-center gap-2 text-sm sm:text-base">
                             <Menu className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -88,20 +60,8 @@ export default function WebCam() {
                     <Separator />
 
                     <Card className="border-gray-700 mt-2">
-                        <ScrollArea className="h-[260px] sm:h-[340px] md:h-[400px] p-4">
-                            <div className="space-y-2">
-                                {chatMessages.map((msg) => (
-                                    <div
-                                        key={msg.id}
-                                        className="flex items-start gap-2 word-break"
-                                    >
-                                        <Badge variant="secondary" className="text-[10px] sm:text-xs">
-                                            {msg.username}
-                                        </Badge>
-                                        <span className="text-base sm:text-lg word-break">{msg.message}</span>
-                                    </div>
-                                ))}
-                            </div>
+                        <ScrollArea className="h-[260px] sm:h-[340px] md:h-[500px] p-4">
+
                         </ScrollArea>
 
                         <Separator />
