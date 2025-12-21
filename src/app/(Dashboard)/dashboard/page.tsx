@@ -1,9 +1,9 @@
-import CreatorDashboard from '@/Pages/Dashboard/DashboardHome/CreatorDashboard';
+import CreatorDashboard from '@/pages/Dashboard/DashboardHome/CreatorDashboard';
 
 const page = () => {
     return (
         <div>
-            <CreatorDashboard/>
+            <CreatorDashboard />
         </div>
     );
 };

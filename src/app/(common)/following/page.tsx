@@ -1,12 +1,12 @@
-import FollowCard from '@/Pages/Following/FollowCard';
-import LatestStreams from '@/Pages/Live/LatestStreams';
+import FollowCard from '@/pages/Following/FollowCard';
+import LatestStreams from '@/pages/Live/LatestStreams';
 import React from 'react';
 
 const page = () => {
     return (
         <div>
-            <FollowCard/>
-            <LatestStreams/>
+            <FollowCard />
+            <LatestStreams />
         </div>
     );
 };

@@ -1,4 +1,4 @@
-import StremedVideoTable from '@/Pages/Dashboard/Videos/StreamedVideos';
+import StremedVideoTable from '@/pages/Dashboard/Videos/StreamedVideos';
 import React from 'react';
 
 const page = () => {

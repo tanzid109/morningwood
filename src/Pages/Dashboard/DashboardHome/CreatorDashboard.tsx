@@ -1,5 +1,5 @@
 import { Card } from '@/components/ui/card';
-import { Latest } from './Latest';
+import Latest from './Latest';
 interface StatItemProps {
     value: string;
     label: string;
@@ -35,7 +35,7 @@ const CreatorDashboard = () => {
                     </div>
                 </Card>
             </div>
-            <Latest/>
+            <Latest />
         </div>
     );
 };

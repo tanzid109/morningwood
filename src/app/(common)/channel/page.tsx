@@ -1,10 +1,10 @@
-import ChannelHome from '@/Pages/Channel/ChannelHome';
+import ChannelHome from '@/pages/Channel/ChannelHome';
 import React from 'react';
 
 const page = () => {
     return (
         <div>
-            <ChannelHome/>
+            <ChannelHome />
         </div>
     );
 };

@@ -8,16 +8,16 @@ import {
 } from "@/components/ui/carousel";
 import { Card } from "@/components/ui/card";
 import Autoplay from "embla-carousel-autoplay";
-import { PopularCards } from "@/Pages/explore/popularCategories";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Star } from "lucide-react";
 import Link from "next/link";
+import PopularCards from "../explore/popularCategories";
 
 export default function FollowCard() {
     const plugin = React.useRef(
-            Autoplay({ delay: 3000, stopOnInteraction: true })
-        );
+        Autoplay({ delay: 3000, stopOnInteraction: true })
+    );
     return (
         <main>
             <div className="flex  justify-between items-center py-4">
@@ -33,7 +33,7 @@ export default function FollowCard() {
                 }}
             >
                 <CarouselContent>
-                    {PopularCards.map((card, idx) => (
+                    {PopularCards().map((card, idx) => (
                         <CarouselItem key={idx} className="md:basis-1/2 lg:basis-1/7">
                             <Card className="bg-[#36190F] border overflow-hidden border-[#5A392F] shadow-lg py-4">
                                 <div className="flex flex-col items-center space-y-4">
@@ -64,7 +64,7 @@ export default function FollowCard() {
                     ))}
                 </CarouselContent>
             </Carousel>
-            
+
         </main>
     );
 }

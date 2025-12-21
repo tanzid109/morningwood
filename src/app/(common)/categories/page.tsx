@@ -1,10 +1,10 @@
-import Categories from "@/Pages/categories/Categories";
+import Categories from "@/pages/categories/Categories";
 
 
 const page = () => {
     return (
         <div>
-            <Categories/>
+            <Categories />
         </div>
     );
 };

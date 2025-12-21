@@ -1,4 +1,4 @@
-import CategoryDetails from '@/Pages/categories/CategoryDetails';
+import CategoryDetails from '@/pages/categories/CategoryDetails';
 import React from 'react';
 
 const page = ({ params }: { params: Promise<{ _id: string }> }) => {

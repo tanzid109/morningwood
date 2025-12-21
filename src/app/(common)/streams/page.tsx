@@ -1,4 +1,4 @@
-import LiveStream from '@/Pages/Streams/LiveStream';
+import LiveStream from '@/pages/Streams/LiveStream';
 import React from 'react';
 
 const page = () => {

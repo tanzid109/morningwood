@@ -1,9 +1,9 @@
-import WebCam from '@/Pages/LiveStream/WebCam';
+import WebCam from '@/pages/LiveStream/WebCam';
 
 const page = () => {
     return (
         <div>
-            <WebCam/>
+            <WebCam />
         </div>
     );
 };

@@ -17,7 +17,7 @@ interface Follower {
     avatar: string;
 }
 
-export const Latest = () => {
+export default function Latest() {
     const streams: Stream[] = [
         { id: 1, title: "🕺 Friday Night Live — Dance & Fun Stream!", views: "2.5K views", thumbnail: "" },
         { id: 2, title: "🕺 Friday Night Live — Dance & Fun Stream!", views: "2.5K views", thumbnail: "" },

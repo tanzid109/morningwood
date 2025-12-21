@@ -1,166 +1,254 @@
-"use client"
-import { useState } from 'react';
-import { GripVertical, X, Pencil, Trash2, Plus } from 'lucide-react';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { AlertDialogHeader } from '@/components/ui/alert-dialog';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
+"use client";
+
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import {
+    GripVertical,
+    Pencil,
+    Trash2,
+    Plus,
+} from "lucide-react";
+
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog";
+
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "@/components/ui/form";
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { AlertDialogHeader } from "@/components/ui/alert-dialog";
+import { createChannelSocialInfo } from "@/Server/Customize_Channel";
+import { toast } from "sonner";
 
 interface SocialLink {
     id: string;
-    title: string;
+    platform: string;
     url: string;
+    displayName: string;
 }
 
-export default function SocialLinks() {
-    const [links, setLinks] = useState<SocialLink[]>([
-        { id: '1', title: 'Twitter', url: 'https://x.com/khksllucan' },
-        { id: '2', title: 'Twitter', url: 'https://x.com/khksllucan' },
-        { id: '3', title: 'Twitter', url: 'https://x.com/khksllucan' },
-        { id: '4', title: 'Twitter', url: 'https://x.com/khksllucan' },
-    ]);
+interface SocialFormValues {
+    platform: string;
+    url: string;
+    displayName: string;
+}
 
+
+export default function SocialLinks() {
+    const [links, setLinks] = useState<SocialLink[]>([]);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [editingLink, setEditingLink] = useState<SocialLink | null>(null);
-    const [formData, setFormData] = useState({ title: '', url: '' });
 
-    const handleAddLink = () => {
+    const form = useForm<SocialFormValues>({
+        defaultValues: {
+            platform: "",
+            url: "",
+            displayName: "",
+        },
+    });
+
+    const handleAdd = () => {
         setEditingLink(null);
-        setFormData({ title: '', url: '' });
+        form.reset();
         setIsDialogOpen(true);
     };
 
-    const handleEditLink = (link: SocialLink) => {
+    const handleEdit = (link: SocialLink) => {
         setEditingLink(link);
-        setFormData({ title: link.title, url: link.url });
+        form.reset({
+            platform: link.platform,
+            url: link.url,
+            displayName: link.displayName,
+        });
         setIsDialogOpen(true);
     };
 
-    const handleDeleteLink = (id: string) => {
-        setLinks(links.filter(link => link.id !== id));
+    const handleDelete = (id: string) => {
+        setLinks((prev) => prev.filter((link) => link.id !== id));
     };
 
-    const handleSubmit = () => {
-        if (formData.title && formData.url) {
-            if (editingLink) {
-                setLinks(links.map(link =>
-                    link.id === editingLink.id
-                        ? { ...link, title: formData.title, url: formData.url }
-                        : link
-                ));
-            } else {
-                const newLink: SocialLink = {
-                    id: Date.now().toString(),
-                    title: formData.title,
-                    url: formData.url,
-                };
-                setLinks([...links, newLink]);
-            }
-            setIsDialogOpen(false);
-            setFormData({ title: '', url: '' });
+    const onSubmit = async (values: SocialFormValues) => {
+        const payload = {
+            platform: values.platform.toLowerCase(),
+            url: values.url,
+            displayName: values.displayName,
+        };
+
+        const res = await createChannelSocialInfo(payload)
+
+        if (res.success) {
+            toast.success(res.message)
         }
+
+        if (editingLink) {
+            setLinks((prev) =>
+                prev.map((link) =>
+                    link.id === editingLink.id
+                        ? { ...link, ...payload }
+                        : link
+                )
+            );
+        } else {
+            setLinks((prev) => [
+                ...prev,
+                {
+                    id: Date.now().toString(),
+                    ...payload,
+                },
+            ]);
+        }
+
+        setIsDialogOpen(false);
+        form.reset();
     };
 
     return (
-        <div className="">
-            <div className=" mx-auto">
-                <h3 className="text-2xl font-semibold mb-2">Add your social account</h3>
-                <div className=" mb-4">
-                    {/* <h2 className="text-lg font-medium">Add Social Link</h2> */}
-                    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                        <DialogTrigger asChild>
-                            <Button
-                                onClick={handleAddLink}
-                            >
-                                <Plus size={16} />
-                                Add Social Link
-                            </Button>
-                        </DialogTrigger>
-                        <DialogContent className="p-10 w-xl">
-                            <AlertDialogHeader>
-                                <DialogTitle>{editingLink ? 'Edit Link' : 'Add New Link'}</DialogTitle>
-                                <DialogDescription className="text-gray-400">
-                                    {editingLink ? 'Update your social link details' : 'Add a new social media link'}
-                                </DialogDescription>
-                            </AlertDialogHeader>
-                            <div className="space-y-4 py-4">
-                                <div className="space-y-2">
-                                    <Label htmlFor="title" className="text-white">Link Title</Label>
-                                    <Input
-                                        id="title"
-                                        placeholder="e.g., Twitter"
-                                        value={formData.title}
-                                        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                                        className="bg-[#1a0f0f] border-gray-700 text-white"
-                                    />
-                                </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="url" className="text-white">Link URL</Label>
-                                    <Input
-                                        id="url"
-                                        placeholder="https://x.com/username"
-                                        value={formData.url}
-                                        onChange={(e) => setFormData({ ...formData, url: e.target.value })}
-                                        className="bg-[#1a0f0f] border-gray-700 text-white"
-                                    />
-                                </div>
-                            </div>
+        <div>
+            <h3 className="text-2xl font-semibold mb-4">
+                Add your social account
+            </h3>
+
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <DialogTrigger asChild>
+                    <Button onClick={handleAdd}>
+                        <Plus size={16} />
+                        Add Social Link
+                    </Button>
+                </DialogTrigger>
+
+                <DialogContent className="p-8 max-w-lg">
+                    <AlertDialogHeader>
+                        <DialogTitle>
+                            {editingLink ? "Edit Link" : "Add New Link"}
+                        </DialogTitle>
+                        <DialogDescription>
+                            Enter your social platform details
+                        </DialogDescription>
+                    </AlertDialogHeader>
+
+                    <Form {...form}>
+                        <form
+                            onSubmit={form.handleSubmit(onSubmit)}
+                            className="space-y-4"
+                        >
+                            {/* Platform */}
+                            <FormField
+                                control={form.control}
+                                name="platform"
+                                rules={{ required: "Platform is required" }}
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Platform</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                placeholder="facebook / twitter"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            {/* Display Name */}
+                            <FormField
+                                control={form.control}
+                                name="displayName"
+                                rules={{ required: "Display name is required" }}
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Display Name</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                placeholder="My Twitter"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            {/* URL */}
+                            <FormField
+                                control={form.control}
+                                name="url"
+                                rules={{
+                                    required: "URL is required",
+                                    pattern: {
+                                        value: /^https?:\/\/.+/,
+                                        message: "Enter a valid URL",
+                                    },
+                                }}
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Profile URL</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                placeholder="https://twitter.com/username"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
                             <DialogFooter>
                                 <Button
-                                    
+                                    type="button"
+                                    variant="destructive"
                                     onClick={() => setIsDialogOpen(false)}
-                                    className="bg-red-500 rounded-md text-black"
                                 >
                                     Cancel
                                 </Button>
-                                <Button
-                                    variant="outline"
-                                    onClick={handleSubmit}
-                                    className=""
-                                >
-                                    {editingLink ? 'Update' : 'Add Link'}
+                                <Button type="submit">
+                                    {editingLink ? "Update" : "Add Link"}
                                 </Button>
                             </DialogFooter>
-                        </DialogContent>
-                    </Dialog>
-                </div>
+                        </form>
+                    </Form>
+                </DialogContent>
+            </Dialog>
 
-                <div className="space-y-3">
-                    {links.map((link) => (
-                        <div
-                            key={link.id}
-                            className="border rounded-lg p-4 flex items-center gap-3"
-                        >
-                            <GripVertical size={20} className="text-gray-500 cursor-move" />
+            <div className="space-y-3 mt-6">
+                {links.map((link) => (
+                    <div
+                        key={link.id}
+                        className="border rounded-lg p-4 flex items-center gap-3"
+                    >
+                        <GripVertical className="text-gray-500" />
 
-                            <div className="flex items-center gap-3 flex-1">
-                                <div className="bg-[#1a0f0f] p-2 rounded">
-                                    <X size={20} />
-                                </div>
-                                <div className="flex-1">
-                                    <h3 className="font-medium">{link.title}</h3>
-                                    <p className="text-sm text-gray-400">{link.url}</p>
-                                </div>
-                            </div>
-
-                            <div className="flex items-center gap-2">
-                                <button
-                                    onClick={() => handleEditLink(link)}
-                                    className="p-2 hover:bg-gray-700 rounded transition-colors"
-                                >
-                                    <Pencil size={18} className="text-gray-400" />
-                                </button>
-                                <button
-                                    onClick={() => handleDeleteLink(link.id)}
-                                    className="p-2 hover:bg-gray-700 rounded transition-colors"
-                                >
-                                    <Trash2 size={18} className="text-red-500" />
-                                </button>
-                            </div>
+                        <div className="flex-1">
+                            <h3 className="font-medium">
+                                {link.displayName}
+                            </h3>
+                            <p className="text-sm text-gray-400">
+                                {link.url}
+                            </p>
                         </div>
-                    ))}
-                </div>
+
+                        <button onClick={() => handleEdit(link)}>
+                            <Pencil size={18} />
+                        </button>
+                        <button onClick={() => handleDelete(link.id)}>
+                            <Trash2 size={18} className="text-red-500" />
+                        </button>
+                    </div>
+                ))}
             </div>
         </div>
     );

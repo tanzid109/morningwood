@@ -1,4 +1,4 @@
-import WebCam from '@/Pages/LiveStream/WebCam';
+import WebCam from '@/pages/LiveStream/WebCam';
 import React from 'react';
 
 const page = () => {

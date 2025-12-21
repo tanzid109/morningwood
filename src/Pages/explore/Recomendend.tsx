@@ -1,7 +1,6 @@
 import { Button } from '@/components/ui/button';
 import CardData from '@/shared/CardData';
 import { Separator } from '@radix-ui/react-separator';
-import React from 'react';
 
 const Recomendend = () => {
     return (

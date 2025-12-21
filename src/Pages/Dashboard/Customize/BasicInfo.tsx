@@ -42,7 +42,7 @@ export default function BasicInfo() {
 
             if (res?.success) {
                 toast.success(res.message || "Channel info updated");
-                reset(); // optional
+                reset();
             } else {
                 toast.error(res?.message || "Something went wrong");
             }
