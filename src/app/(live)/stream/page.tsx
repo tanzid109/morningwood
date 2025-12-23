@@ -1,9 +1,11 @@
-import WebCam from '@/pages/LiveStream/WebCam';
+import AWSStreamCreationForm from '@/pages/LiveStream/AWS';
+// import WebCam from '@/pages/LiveStream/WebCam';
 
 const page = () => {
     return (
         <div>
-            <WebCam />
+            {/* <WebCam /> */}
+            <AWSStreamCreationForm/>
         </div>
     );
 };

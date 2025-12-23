@@ -73,7 +73,7 @@ const ChannelHome = async () => {
                 <Separator />
                 <TabsContent value="home"><ChannelHomeData /></TabsContent>
                 <TabsContent value="videos"><ChannelVideos /></TabsContent>
-                <TabsContent value="about"><ChannelAbout /></TabsContent>
+                <TabsContent value="about"><ChannelAbout channelDetails={channelDetails} /></TabsContent>
             </Tabs>
         </main>
     );

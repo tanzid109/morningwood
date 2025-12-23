@@ -11,7 +11,6 @@ import { Card } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Input } from '@/components/ui/input';
 import LiveStreamStats from './LiveStreamStats';
-import LiveForm from './Live';
 
 export default function WebCam() {
 

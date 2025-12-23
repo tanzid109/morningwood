@@ -41,7 +41,7 @@ export default function MainCard({
             {/* Thumbnail with Real Image */}
             <div className="relative aspect-video overflow-hidden bg-gray-800">
                 <Image
-                    src={thumbnailUrl}
+                    src={thumbnailUrl || '/assets/logo.png'}
                     alt={title}
                     fill
                     className="object-cover transition-transform duration-300 hover:scale-105"
@@ -64,7 +64,7 @@ export default function MainCard({
                 </button>
             </div>
 
-            <CardContent className="pt-4">
+            <CardContent className="pt-3">
                 {/* Title */}
                 <h3 className="font-semibold text-lg line-clamp-1 mb-2">
                     {title}

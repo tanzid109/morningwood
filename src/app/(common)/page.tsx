@@ -1,15 +1,15 @@
-import GamingStreams from '@/pages/Live/GamingStreams';
-import IRL from '@/pages/Live/IRL';
-import LatestStreams from '@/pages/Live/LatestStreams';
+// import GamingStreams from '@/pages/Live/GamingStreams';
+// import IRL from '@/pages/Live/IRL';
+// import LatestStreams from '@/pages/Live/LatestStreams';
 import LiveStream from '@/pages/Live/LiveStream';
 
 const Home = () => {
     return (
         <div>
             <LiveStream />
-            <LatestStreams />
+            {/* <LatestStreams />
             <GamingStreams />
-            <IRL />
+            <IRL /> */}
         </div>
     );
 };

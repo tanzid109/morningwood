@@ -13,7 +13,10 @@ import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/components/
 import { Upload, Check, Radio } from 'lucide-react';
 import { getCategories } from '@/Server/Categories';
 import { getIngestConfig, goLiveStream } from '@/Server/Live';
-import { AmazonIVSBroadcastClient } from 'amazon-ivs-web-broadcast';
+import IVSBroadcastClient, {
+    Errors,
+    BASIC_LANDSCAPE
+} from 'amazon-ivs-web-broadcast'
 
 interface StreamFormData {
     title: string;
@@ -34,7 +37,7 @@ export default function StreamCreationForm() {
     const [isLive, setIsLive] = useState(false);
 
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const clientRef = useRef<AmazonIVSBroadcastClient | null>(null);
+    const clientRef = useRef<IVSBroadcastClient | null>(null);
 
     // Fetch categories on mount
     useEffect(() => {
@@ -55,8 +58,11 @@ export default function StreamCreationForm() {
                     console.log(config);
                     // Initialize broadcast client
                     if (canvasRef.current) {
-                        const client = AmazonIVSBroadcastClient.create({
-                            canvas: canvasRef.current
+                        const client = IVSBroadcastClient.create({
+                            // Enter the desired stream configuration
+                            streamConfig: IVSBroadcastClient.BASIC_LANDSCAPE,
+                            // Enter the ingest endpoint from the AWS console or CreateChannel API
+                            ingestEndpoint: 'UNIQUE_ID.global-contribute.live-video.net',
                         });
                         clientRef.current = client;
                     }

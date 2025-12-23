@@ -4,13 +4,12 @@ import "./globals.css";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/sonner";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
-import { Bell, Radio, SearchIcon } from "lucide-react";
-import { NavUserDesk } from "@/components/Home/nav-userDesk";
+import { SearchIcon } from "lucide-react";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { AppSidebarDashboard } from "@/components/Dashboard/app-sidebarDashboard";
 import Providers from "@/Provider/Providers";
+import LoggedUser from "@/auth/loggedUser/LoggedUser";
 
 const sora = Sora({
   variable: "--font-sora",
@@ -27,15 +26,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
-  const data = {
-    user: {
-      channel: "Channel Name",
-      name: "Moriningwood",
-      email: "sana_afrin03@gmail.com",
-      avatar: "/assets/logo.png",
-    },
-  }
 
   return (
     <Providers>
@@ -73,13 +63,7 @@ export default function RootLayout({
                 </div>
 
                 {/* Right section */}
-                <div className="flex items-center gap-4 md:gap-6 flex-wrap">
-                  <Bell className="text-[#FDD3C6]" />
-                  <Link href="/stream"><Button className="bg-red-500 hidden md:flex"><Radio /> Go live</Button></Link>
-                  <div className="hidden md:flex">
-                    <NavUserDesk user={data.user} />
-                  </div>
-                </div>
+                <LoggedUser/>
               </header>
               <div className="px-4 md:px-8">
                 {children}
