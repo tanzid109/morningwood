@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { getAllLiveStreams } from '@/Server/Streams';
-import MainCard from '@/shared/Cards';
+import MainCard from '@/shared/LiveCards';
 
 // Define the API response type
 interface Creator {
@@ -105,13 +105,14 @@ const LiveStream = async () => {
                     return (
                         <MainCard
                             key={stream._id}
+                            _id={stream._id}
                             title={stream.title}
                             category={stream.categoryId?.name || 'Uncategorized'}
                             streamer={streamerName}
                             followers={`${followers.toLocaleString()}`}
                             viewers={stream.currentViewers}
                             startedAgo={getTimeAgo(stream.startedAt)}
-                            thumbnailUrl={stream.thumbnail}
+                            thumbnail={stream.thumbnail}
                             avatarUrl={avatarUrl}
                         />
                     );

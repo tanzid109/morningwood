@@ -1,11 +1,14 @@
 "use client";
 
+import { StreamProvider } from "@/Context/StreamContext";
 import UserProvider from "@/Context/UserContext";
 
 const Providers = ({ children }: { children: React.ReactNode }) => {
     return (
         <UserProvider>
-            {children}
+            <StreamProvider>
+                {children}
+            </StreamProvider>
         </UserProvider>
     );
 };
