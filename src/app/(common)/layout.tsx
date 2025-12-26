@@ -44,8 +44,9 @@ export default function RootLayout({
                     <Image
                       src="/assets/logo.png"
                       alt="Logo"
-                      fill
-                      className="object-contain"
+                      height={64}
+                      width={64}
+                      className="object-contain unoptimized"
                     />
                   </div>
                 </div>

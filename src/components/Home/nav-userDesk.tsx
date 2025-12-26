@@ -22,20 +22,21 @@ import { HeartIcon, LogOut, LucideLayoutDashboard, Settings } from "lucide-react
 import Link from "next/link"
 import { Spinner } from "@/components/ui/spinner"
 
-export function NavUserDesk({
-    user,
-    onLogout,
-    isLoggingOut = false,
-}: {
-    user: {
-        channelName: string
-        username: string
-        email: string
-        image: string
-    }
-    onLogout?: () => void
-    isLoggingOut?: boolean
-}) {
+export function NavUserDesk(
+    {
+        user,
+        onLogout,
+        isLoggingOut = false,
+    }: {
+        user: {
+            channelName: string
+            username: string
+            email: string
+            image: string
+        }
+        onLogout?: () => void
+        isLoggingOut?: boolean
+    }) {
     return (
         <SidebarMenu>
             <SidebarMenuItem>

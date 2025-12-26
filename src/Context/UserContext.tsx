@@ -5,11 +5,11 @@ export interface IUser {
     email: string;
     username?: string;
     channelName?: string;
-    image: string;
+    image?: string;
     exp?: number;
     iat?: number;
     id: string;
-    role: "USER"; 
+    role: string;
 }
 
 interface IUserProviderValues {
@@ -25,7 +25,7 @@ const UserContext = createContext<IUserProviderValues | undefined>(undefined);
 const UserProvider = ({ children }: { children: React.ReactNode }) => {
     const [user, setUser] = useState<IUser | null>(null);
     const [isLoading, setIsLoading] = useState(true);
-    console.log(user);
+    // console.log(user);
     const handleUser = async () => {
         try {
             setIsLoading(true);

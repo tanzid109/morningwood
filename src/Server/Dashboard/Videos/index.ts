@@ -1,7 +1,14 @@
 "use server"
-import { cookies } from "next/headers"
 
-export const getCategories = async () => {
+import { cookies } from "next/headers";
+
+interface GetAllVideoParams {
+    page?: number;
+    limit?: number;
+}
+
+
+export const getAllUserVideos = async (params?: GetAllVideoParams) => {
     try {
         const cookieStore = await cookies()
         const accessToken = cookieStore.get("accessToken")?.value
@@ -13,16 +20,26 @@ export const getCategories = async () => {
             }
         }
 
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/v1/admin/categories`, {
+        // Build query parameters
+        const queryParams = new URLSearchParams();
+        if (params?.page) {
+            queryParams.append('page', params.page.toString());
+        }
+        if (params?.limit) {
+            queryParams.append('limit', params.limit.toString());
+        }
+
+        const queryString = queryParams.toString();
+        const url = `${process.env.NEXT_PUBLIC_BASE_API}/api/v1/streams/my-streams${queryString ? `?${queryString}` : ''}`;
+
+        const res = await fetch(url, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${accessToken}`,
             },
             credentials: "include",
-            next: {
-                revalidate: 10
-            },
+            cache: "no-store",
         })
 
         if (!res.ok) {
@@ -36,7 +53,7 @@ export const getCategories = async () => {
         const data = await res.json()
         return data
     } catch (error) {
-        console.error("Error fetching dashboard stats:", error)
+        console.error("Error fetching users:", error)
         return {
             success: false,
             message: "Network error occurred"

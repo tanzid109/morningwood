@@ -20,7 +20,6 @@ function decodeJWT(token: string) {
 
 export const getChannelDetails = async () => {
     try {
-
         const cookieStore = await cookies()
         const accessToken = cookieStore.get("accessToken")?.value
 
@@ -44,11 +43,10 @@ export const getChannelDetails = async () => {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${accessToken}`, 
             },
             credentials: "include",
-            next: {
-                revalidate: 10
-            },
+            cache: "no-store",
         })
 
         if (!res.ok) {

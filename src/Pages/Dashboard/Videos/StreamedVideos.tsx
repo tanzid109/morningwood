@@ -7,73 +7,173 @@ import {
     getFilteredRowModel,
     ColumnFiltersState,
 } from "@tanstack/react-table";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Search, ChevronRight, ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { videosData } from "@/Database/Video";
-import { Checkbox } from "@/components/ui/checkbox";
-import { DataTable } from "@/shared/Table/Table";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
+import Image from "next/image";
+import { getAllUserVideos } from "@/Server/Dashboard/Videos";
+import { DataTable } from "@/shared/Table/Table";
 
-interface Video {
-    id:number,
-    title: string;
-    visibility: "Public" | "Private";
-    streamedOn: string;
-    views: string;
-    likes: string;
+interface Creator {
+    _id: string;
+    image: string;
+    channelName: string;
+    username: string;
 }
 
-export default function StreamedVideoTable() {
-    const [videos, setVideos] = useState<Video[]>(videosData);
-    const [pageSize, setPageSize] = useState(6);
+interface Category {
+    _id: string;
+    name: string;
+}
+
+interface Stream {
+    _id: string;
+    creatorId: Creator | string;
+    title: string;
+    categoryId: Category | null;
+    thumbnail: string;
+    status: "LIVE" | "OFFLINE";
+    isPublic: boolean;
+    startedAt: string;
+    totalViews: number;
+    totalLikes: number;
+    totalComments: number;
+    endedAt?: string;
+}
+
+interface TableStream extends Stream {
+    streamedOn: string;
+}
+
+export default function ContentTable() {
+    const [streams, setStreams] = useState<TableStream[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [pageSize, setPageSize] = useState(5);
     const [pageIndex, setPageIndex] = useState(0);
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
     const [globalFilter, setGlobalFilter] = useState("");
-    const [visibilityFilter, setVisibilityFilter] = useState<string>("all");
     const [sortOption, setSortOption] = useState<string>("newold");
     const [rowSelection, setRowSelection] = useState({});
-    const [actionValue, setActionValue] = useState<string>("");
+    const [totalStreams, setTotalStreams] = useState(0);
 
-    const columns: ColumnDef<Video>[] = [
+    // Fetch streams from API with pagination
+    useEffect(() => {
+        const fetchStreams = async () => {
+            try {
+                setLoading(true);
+
+                const response = await getAllUserVideos({
+                    page: pageIndex + 1,
+                    limit: pageSize
+                });
+                // console.log(response);
+
+                // Fixed: API returns data as array directly, not data.streams
+                if (response.success && Array.isArray(response.data)) {
+                    const transformedStreams = response.data.map((stream: Stream) => ({
+                        ...stream,
+                        streamedOn: new Date(stream.startedAt).toISOString().split('T')[0]
+                    }));
+                    setStreams(transformedStreams);
+                    // Fixed: total is in meta.total, not data.total
+                    setTotalStreams(response.meta?.total || 0);
+                } else {
+                    toast.error(response.message || "Failed to fetch streams");
+                    setStreams([]);
+                    setTotalStreams(0);
+                }
+            } catch (error) {
+                console.error("Error fetching streams:", error);
+                toast.error("An error occurred while fetching streams");
+                setStreams([]);
+                setTotalStreams(0);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchStreams();
+    }, [pageIndex, pageSize]);
+
+    const formatNumber = (num: number): string => {
+        if (num >= 1000000000) return `${(num / 1000000000).toFixed(1)} B`;
+        if (num >= 1000000) return `${(num / 1000000).toFixed(1)} M`;
+        if (num >= 1000) return `${(num / 1000).toFixed(1)} K`;
+        return num.toString();
+    };
+
+    const columns: ColumnDef<TableStream>[] = [
         {
-            id: "select",
-            header: ({ table }) => (
-                <Checkbox
-                    checked={
-                        table.getIsAllPageRowsSelected() ||
-                        (table.getIsSomePageRowsSelected() && "indeterminate")
-                    }
-                    onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-                    aria-label="Select all"
-                />
-            ),
-            cell: ({ row }) => (
-                <Checkbox
-                    checked={row.getIsSelected()}
-                    onCheckedChange={(value) => row.toggleSelected(!!value)}
-                    aria-label="Select row"
-                />
-            ),
-            enableSorting: false,
-            enableHiding: false,
-        },
-        {
-            accessorKey: "title",
-            header: () => <div className="text-center">Video</div>,
+            accessorKey: "_id",
+            header: () => <div className="text-center">ID</div>,
             cell: ({ row }) => (
                 <div className="text-center">
-                    <span>{row.original.title}</span>
+                    <span>{row.original._id.substring(0, 8)}</span>
                 </div>
             ),
         },
         {
-            accessorKey: "visibility",
+            accessorKey: "title",
+            header: () => <div className="text-left">Stream</div>,
+            cell: ({ row }) => (
+                <div className="flex justify-stretch items-center gap-2">
+                    {row.original.thumbnail ? (
+                        <Image
+                            src={row.original.thumbnail}
+                            alt={row.original.title}
+                            width={96}
+                            height={56}
+                            className="h-14 w-24 rounded-2xl object-cover"
+                        />
+                    ) : (
+                        <span className="h-14 w-24 rounded-2xl bg-[#4C2C22]"></span>
+                    )}
+                    <div className="flex flex-col">
+                        <span className="font-medium truncate">{row.original.title}</span>
+                        {row.original.categoryId && (
+                            <span className="text-xs text-gray-500">{row.original.categoryId.name}</span>
+                        )}
+                    </div>
+                </div>
+            ),
+        },
+        {
+            accessorKey: "creatorId",
+            header: () => <div className="text-center">Creator</div>,
+            cell: ({ row }) => {
+                const creator = row.original.creatorId;
+                const creatorName = typeof creator === 'object' && creator !== null
+                    ? (creator.channelName || creator.username || "N/A")
+                    : "N/A";
+                return (
+                    <div className="text-center">
+                        <span>{creatorName}</span>
+                    </div>
+                );
+            },
+        },
+        {
+            accessorKey: "status",
+            header: () => <div className="text-center">Status</div>,
+            cell: ({ row }) => (
+                <div className="text-center">
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${row.original.status === 'LIVE'
+                        ? 'bg-green-100 text-green-800'
+                        : 'bg-gray-100 text-gray-800'
+                        }`}>
+                        {row.original.status}
+                    </span>
+                </div>
+            ),
+        },
+        {
+            accessorKey: "isPublic",
             header: () => <div className="text-center">Visibility</div>,
             cell: ({ row }) => (
                 <div className="text-center">
-                    <span>{row.original.visibility}</span>
+                    <span>{row.original.isPublic ? "Public" : "Private"}</span>
                 </div>
             ),
         },
@@ -87,92 +187,78 @@ export default function StreamedVideoTable() {
             ),
         },
         {
-            accessorKey: "views",
+            accessorKey: "totalViews",
             header: () => <div className="text-center">Views</div>,
             cell: ({ row }) => (
                 <div className="text-center">
-                    <span>{row.original.views}</span>
+                    <span>{formatNumber(row.original.totalViews)}</span>
                 </div>
             ),
         },
         {
-            accessorKey: "likes",
+            accessorKey: "totalLikes",
             header: () => <div className="text-center">Likes</div>,
             cell: ({ row }) => (
                 <div className="text-center">
-                    <span>{row.original.likes}</span>
+                    <span>{formatNumber(row.original.totalLikes)}</span>
                 </div>
             ),
         },
     ];
 
-    // Helper function to parse numeric values from strings
-    const parseNumber = (value: string): number => {
-        return parseInt(value.replace(/,/g, ''), 10) || 0;
-    };
-
-    // Helper function to parse date
-    const parseDate = (dateStr: string): number => {
-        return new Date(dateStr).getTime();
-    };
-
-    // Filtering and Sorting logic
     const filteredData = useMemo(() => {
-        let filtered = videos;
+        let filtered = streams;
 
-        // Apply visibility filter
-        if (visibilityFilter !== "all") {
-            filtered = filtered.filter((video) =>
-                video.visibility.toLowerCase() === visibilityFilter.toLowerCase()
-            );
-        }
-
-        // Apply search filter
         if (globalFilter) {
             const searchValue = globalFilter.toLowerCase();
-            filtered = filtered.filter((video) =>
-                [
-                    video.title,
-                    video.visibility,
-                    video.streamedOn,
-                    video.views,
-                    video.likes
-                ].some((field) => field?.toString().toLowerCase().includes(searchValue))
-            );
+            filtered = filtered.filter((stream) => {
+                const creator = stream.creatorId;
+                const creatorName = typeof creator === 'object' && creator !== null
+                    ? (creator.channelName || creator.username)
+                    : '';
+
+                return [
+                    stream.title,
+                    creatorName,
+                    stream.categoryId?.name,
+                    stream.status,
+                    stream.streamedOn,
+                ].some((field) => field?.toString().toLowerCase().includes(searchValue));
+            });
         }
 
-        // Apply sorting
         const sorted = [...filtered];
         switch (sortOption) {
             case "newold":
-                sorted.sort((a, b) => parseDate(b.streamedOn) - parseDate(a.streamedOn));
+                sorted.sort((a, b) => new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime());
                 break;
             case "oldnew":
-                sorted.sort((a, b) => parseDate(a.streamedOn) - parseDate(b.streamedOn));
+                sorted.sort((a, b) => new Date(a.startedAt).getTime() - new Date(b.startedAt).getTime());
                 break;
             case "VHL":
-                sorted.sort((a, b) => parseNumber(b.views) - parseNumber(a.views));
+                sorted.sort((a, b) => b.totalViews - a.totalViews);
                 break;
             case "VLH":
-                sorted.sort((a, b) => parseNumber(a.views) - parseNumber(b.views));
+                sorted.sort((a, b) => a.totalViews - b.totalViews);
                 break;
             case "LHL":
-                sorted.sort((a, b) => parseNumber(b.likes) - parseNumber(a.likes));
+                sorted.sort((a, b) => b.totalLikes - a.totalLikes);
                 break;
             case "LLH":
-                sorted.sort((a, b) => parseNumber(a.likes) - parseNumber(b.likes));
+                sorted.sort((a, b) => a.totalLikes - b.totalLikes);
                 break;
             default:
                 break;
         }
 
         return sorted;
-    }, [videos, visibilityFilter, globalFilter, sortOption]);
+    }, [streams, globalFilter, sortOption]);
 
     const table = useReactTable({
         data: filteredData,
         columns,
-        pageCount: Math.ceil(filteredData.length / pageSize),
+        pageCount: Math.ceil(totalStreams / pageSize),
+        manualPagination: true,
         state: {
             pagination: { pageIndex, pageSize },
             columnFilters,
@@ -196,75 +282,19 @@ export default function StreamedVideoTable() {
         getFilteredRowModel: getFilteredRowModel(),
     });
 
-    // Handle bulk actions
-    const handleAction = (action: string) => {
-        const selectedRows = table.getSelectedRowModel().rows;
-
-        if (selectedRows.length === 0) {
-            toast.error("Please select at least one video");
-            setActionValue("");
-            return;
-        }
-
-        // Get the actual video objects instead of indices
-        const selectedVideos = selectedRows.map(row => row.original);
-
-        switch (action) {
-            case "delete":
-                if (confirm(`Are you sure you want to delete ${selectedRows.length} video(s)?`)) {
-                    // Filter out selected videos by comparing all properties
-                    const updatedVideos = videos.filter(video =>
-                        !selectedVideos.some(selected =>
-                            selected.title === video.title &&
-                            selected.streamedOn === video.streamedOn &&
-                            selected.views === video.views &&
-                            selected.likes === video.likes
-                        )
-                    );
-                    setVideos(updatedVideos);
-                    setRowSelection({});
-                    toast.success(`${selectedRows.length} video(s) deleted successfully`);
-                }
-                break;
-
-            case "private":
-                const updatedToPrivate = videos.map(video => {
-                    const isSelected = selectedVideos.some(selected =>
-                        selected.title === video.title &&
-                        selected.streamedOn === video.streamedOn &&
-                        selected.views === video.views &&
-                        selected.likes === video.likes
-                    );
-                    return isSelected ? { ...video, visibility: "Private" as const } : video;
-                });
-                setVideos(updatedToPrivate);
-                setRowSelection({});
-                toast.success(`${selectedRows.length} video(s) set to Private`);
-                break;
-
-            case "public":
-                const updatedToPublic = videos.map(video => {
-                    const isSelected = selectedVideos.some(selected =>
-                        selected.title === video.title &&
-                        selected.streamedOn === video.streamedOn &&
-                        selected.views === video.views &&
-                        selected.likes === video.likes
-                    );
-                    return isSelected ? { ...video, visibility: "Public" as const } : video;
-                });
-                setVideos(updatedToPublic);
-                setRowSelection({});
-                toast.success(`${selectedRows.length} video(s) set to Public`);
-                break;
-        }
-        setActionValue("");
-    };
-
     const selectedCount = table.getSelectedRowModel().rows.length;
+
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center h-64">
+                <div className="text-[#FDD3C6] text-xl">Loading streams...</div>
+            </div>
+        );
+    }
 
     return (
         <div>
-            <h2 className="text-[#FDD3C6] text-4xl font-semibold my-3 px-2">Catalog Management</h2>
+            <h2 className="text-[#FDD3C6] text-4xl font-semibold my-3 px-2">Content</h2>
 
             {/* Search & Filters */}
             <div className="py-6 flex flex-col md:flex-row justify-between items-center my-6 gap-4">
@@ -273,44 +303,17 @@ export default function StreamedVideoTable() {
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#FDD3C6] w-4 h-4" />
                     <input
                         type="text"
-                        placeholder="Search videos..."
+                        placeholder="Search streams..."
                         value={globalFilter}
-                        onChange={(e) => {
-                            setGlobalFilter(e.target.value);
-                            setPageIndex(0);
-                        }}
-                        className="shadow rounded-md border py-2 pl-10 pr-8 text-[#FDD3C6] focus:ring-2 focus:ring-[#635BFF] focus:outline-none cursor-pointer w-full md:w-80"
+                        onChange={(e) => setGlobalFilter(e.target.value)}
+                        className="shadow rounded-md border py-2 pl-10 pr-8 text-[#FDD3C6] focus:ring-2 focus:ring-[#FDD3C6] focus:outline-none w-full md:w-80"
                     />
                 </div>
 
                 {/* Filters */}
                 <div className="flex flex-wrap justify-center md:justify-end items-center gap-3 w-full md:w-auto">
-                    {/* Action Select */}
-                    <Select
-                        value={actionValue}
-                        onValueChange={(value) => {
-                            setActionValue(value);
-                            handleAction(value);
-                        }}
-                    >
-                        <SelectTrigger className={`w-[180px] ${selectedCount > 0 ? 'border-[#635BFF] border-2' : ''}`}>
-                            <SelectValue placeholder={selectedCount > 0 ? `Action (${selectedCount})` : "Action"} />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectGroup>
-                                <SelectLabel>Action</SelectLabel>
-                                <SelectItem value="delete">Delete Permanently</SelectItem>
-                                <SelectItem value="private"> Private</SelectItem>
-                                <SelectItem value="public"> Public</SelectItem>
-                            </SelectGroup>
-                        </SelectContent>
-                    </Select>
-
                     {/* Sort Select */}
-                    <Select value={sortOption} onValueChange={(value) => {
-                        setSortOption(value);
-                        setPageIndex(0);
-                    }}>
+                    <Select value={sortOption} onValueChange={setSortOption}>
                         <SelectTrigger className="w-[180px]">
                             <SelectValue placeholder="Sorting" />
                         </SelectTrigger>
@@ -334,7 +337,7 @@ export default function StreamedVideoTable() {
 
             {/* Results */}
             <div className="mt-2 text-sm text-center text-[#FDD3C6]">
-                Showing {table.getRowModel().rows.length} of {filteredData.length} results
+                Showing {Math.min((pageIndex * pageSize) + 1, totalStreams)} to {Math.min((pageIndex + 1) * pageSize, totalStreams)} of {totalStreams} results
                 {selectedCount > 0 && <span className="ml-2 font-semibold">({selectedCount} selected)</span>}
             </div>
 
@@ -421,11 +424,14 @@ export default function StreamedVideoTable() {
                     <p className="text-[#FDD3C6] text-sm md:text-base">Show per page</p>
                     <select
                         value={table.getState().pagination.pageSize}
-                        onChange={(e) => table.setPageSize(Number(e.target.value))}
-                        className="border p-2 rounded-lg bg-[#F8F8F8] text-[#333333] font-medium text-sm md:text-base"
+                        onChange={(e) => {
+                            table.setPageSize(Number(e.target.value));
+                            setPageIndex(0);
+                        }}
+                        className="border p-1 rounded-lg bg-[#36190F] text-white font-medium text-sm md:text-base"
                     >
-                        {[5, 6, 10, 20].map((size) => (
-                            <option key={size} value={size}>
+                        {[5, 10, 20].map((size) => (
+                            <option className="bg-[#36190F]" key={size} value={size}>
                                 {size}
                             </option>
                         ))}
