@@ -39,7 +39,7 @@ export default function RecordCard({
 
     const handleId = (id: string) => {
         console.log(id);
-        router.push(`/${id}`)
+        router.push(`/streams/${id}`)
     };
 
     return (
@@ -70,7 +70,7 @@ export default function RecordCard({
                 </h3>
 
                 <div className="flex justify-between mb-3">
-                    <p className="text-sm">{viewers.toLocaleString()} watching</p>
+                    <p className="text-sm">{viewers.toLocaleString()} watched</p>
                     <p className="text-xs opacity-70">started {startedAgo}</p>
                 </div>
 

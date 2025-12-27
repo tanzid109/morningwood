@@ -1,23 +1,23 @@
 "use server"
-import { cookies } from "next/headers"
+// import { cookies } from "next/headers"
 
 export const getCategories = async () => {
     try {
-        const cookieStore = await cookies()
-        const accessToken = cookieStore.get("accessToken")?.value
+        // const cookieStore = await cookies()
+        // const accessToken = cookieStore.get("accessToken")?.value
 
-        if (!accessToken) {
-            return {
-                success: false,
-                message: "No access token found"
-            }
-        }
+        // if (!accessToken) {
+        //     return {
+        //         success: false,
+        //         message: "No access token found"
+        //     }
+        // }
 
         const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/v1/admin/categories`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${accessToken}`,
+                // "Authorization": `Bearer ${accessToken}`,
             },
             credentials: "include",
             next: {

@@ -1,12 +1,18 @@
 import CategoryDetails from '@/pages/categories/CategoryDetails';
 import React from 'react';
 
-const page = ({ params }: { params: Promise<{ _id: string }> }) => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const { _id } = React.use(params);
+interface PageProps {
+    params: Promise<{
+        id: string;
+    }>;
+}
+
+const page = async ({ params }: PageProps) => {
+    const { id } = await params;
+
     return (
         <div>
-            <CategoryDetails _id={_id} />
+            <CategoryDetails _id={id} />
         </div>
     );
 };

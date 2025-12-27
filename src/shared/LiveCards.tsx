@@ -39,7 +39,7 @@ export default function MainCard({
 
     const handleId = (id: string) => {
         console.log(id);
-        router.push(`/${id}`)
+        router.push(`/live/${id}`)
     };
 
     return (

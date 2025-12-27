@@ -12,13 +12,13 @@ const ChannelCustomize = () => {
     const handleBack = () => router.back();
     return (
         <main>
-            <div className="absolute top-3 left-3">
+            <div className="mt-5">
                 <Button
                     onClick={handleBack}
-                    className="text-[#FDD3C6] hover:bg-[#3A211B]"
+                    className="text-[#72463a] hover:bg-[#FDD3C6] bg-[#FDD3C6]"
                     aria-label="Go back"
                 >
-                    <ChevronLeft size={20} />
+                    <ChevronLeft className="size-4" />
                 </Button>
             </div>
             <h2 className='text-[#FDD3C6] font-semibold text-2xl my-5'>Channel Customization</h2>
