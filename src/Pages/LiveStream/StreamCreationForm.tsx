@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/incompatible-library */
 import React, { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -14,8 +15,6 @@ import { Upload, Check, Radio } from 'lucide-react';
 import { getCategories } from '@/Server/Categories';
 import { getIngestConfig, goLiveStream } from '@/Server/Live';
 import IVSBroadcastClient, {
-    Errors,
-    BASIC_LANDSCAPE
 } from 'amazon-ivs-web-broadcast'
 
 interface StreamFormData {
@@ -37,7 +36,7 @@ export default function StreamCreationForm() {
     const [isLive, setIsLive] = useState(false);
 
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const clientRef = useRef<IVSBroadcastClient | null>(null);
+    const clientRef = useRef<ReturnType<typeof IVSBroadcastClient.create> | null>(null);
 
     // Fetch categories on mount
     useEffect(() => {
@@ -148,14 +147,11 @@ export default function StreamCreationForm() {
                 audio: true
             });
 
-            const videoTrack = stream.getVideoTracks()[0];
-            const audioTrack = stream.getAudioTracks()[0];
+            // Add MediaStream directly to IVS
+            clientRef.current.addVideoInputDevice(stream, 'camera', { index: 0 });
+            clientRef.current.addAudioInputDevice(stream, 'microphone');
 
-            const videoInput = clientRef.current.getVideoInputDevice(videoTrack);
-            const audioInput = clientRef.current.getAudioInputDevice(audioTrack);
 
-            clientRef.current.addVideoInputDevice(videoInput);
-            clientRef.current.addAudioInputDevice(audioInput);
 
             // Step 3: Start IVS broadcast
             await clientRef.current.startBroadcast(
