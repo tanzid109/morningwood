@@ -7,6 +7,8 @@ import ChannelVideos from "./ChannelVideos";
 import ChannelAbout from "./ChannelAbout";
 import { getChannelDetails } from "@/Server/Channel";
 
+export const dynamic = "force-dynamic";
+
 const ChannelHome = async () => {
 
     const res = await getChannelDetails();
@@ -16,7 +18,7 @@ const ChannelHome = async () => {
         <main>
             <header className="h-40 sm:h-44 md:h-56 lg:h-64 w-full rounded-2xl my-5 overflow-hidden">
                 <Image
-                    src={channelDetails.coverPhoto || "/assets/channel-cover.jpg"}
+                    src={channelDetails?.coverPhoto || "/assets/live.png"}
                     alt="Concert crowd with hands raised"
                     className="w-full h-full object-cover"
                     height="200"
@@ -30,7 +32,7 @@ const ChannelHome = async () => {
                     {/* Avatar */}
                     <div className="h-16 w-16 sm:h-20 sm:w-20 overflow-hidden rounded-full">
                         <Image
-                            src={channelDetails.profilePhoto || "/assets/channel-cover.jpg"}
+                            src={channelDetails?.profilePhoto || "/assets/live.png"}
                             alt="avatar"
                             width={80}
                             height={80}

@@ -10,6 +10,9 @@ import Link from "next/link";
 import { AppSidebarStream } from "@/components/Stream/app-sidebarStream";
 import LoggedUser from "@/auth/loggedUser/LoggedUser";
 import Providers from "@/Provider/Providers";
+import { StreamProvider } from "@/Context/StreamContext";
+
+export const dynamic = 'force-dynamic';
 
 const sora = Sora({
   variable: "--font-sora",
@@ -29,52 +32,54 @@ export default function RootLayout({
 
   return (
     <Providers>
-      <html lang="en">
-        <body className={`${sora.variable} antialiased`}>
-          <SidebarProvider>
-            <AppSidebarStream />
-            <SidebarInset>
-              <header className="sticky bg-[#24120C] top-0 z-50 backdrop-blur-xl flex flex-wrap justify-between items-center p-2 gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-auto border-b border-[#5A392F]">
+      <StreamProvider>
+        <html lang="en">
+          <body className={`${sora.variable} antialiased`}>
+            <SidebarProvider>
+              <AppSidebarStream />
+              <SidebarInset>
+                <header className="sticky bg-[#24120C] top-0 z-50 backdrop-blur-xl flex flex-wrap justify-between items-center p-2 gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-auto border-b border-[#5A392F]">
 
-                {/* Left section */}
-                <div className="flex items-center justify-center gap-3 px-4">
-                  <SidebarTrigger className="-ml-1" />
-                  {/* Logo placeholder */}
-                  <div className="relative mx-auto w-16 h-16">
-                    <Link href="/stream">
-                      <Image
-                        src="/assets/logo.png"
-                        alt="Logo"
-                        fill
-                        className="object-contain"
-                      />
-                    </Link>
+                  {/* Left section */}
+                  <div className="flex items-center justify-center gap-3 px-4">
+                    <SidebarTrigger className="-ml-1" />
+                    {/* Logo placeholder */}
+                    <div className="relative mx-auto w-16 h-16">
+                      <Link href="/stream">
+                        <Image
+                          src="/assets/logo.png"
+                          alt="Logo"
+                          fill
+                          className="object-contain"
+                        />
+                      </Link>
+                    </div>
                   </div>
-                </div>
 
-                {/* Search input */}
-                <div className="flex-1 min-w-[150px] max-w-full md:max-w-[24rem]">
-                  <InputGroup>
-                    <InputGroupInput className="w-full" placeholder="Search your favorite channel" />
-                    <InputGroupAddon>
-                      <SearchIcon />
-                    </InputGroupAddon>
-                  </InputGroup>
-                </div>
+                  {/* Search input */}
+                  <div className="flex-1 min-w-[150px] max-w-full md:max-w-[24rem]">
+                    <InputGroup>
+                      <InputGroupInput className="w-full" placeholder="Search your favorite channel" />
+                      <InputGroupAddon>
+                        <SearchIcon />
+                      </InputGroupAddon>
+                    </InputGroup>
+                  </div>
 
-                {/* Right section */}
-                <div className="flex items-center gap-4 md:gap-6 flex-wrap">
-                  <LoggedUser />
+                  {/* Right section */}
+                  <div className="flex items-center gap-4 md:gap-6 flex-wrap">
+                    <LoggedUser />
+                  </div>
+                </header>
+                <div className="px-4 md:px-8">
+                  {children}
                 </div>
-              </header>
-              <div className="px-4 md:px-8">
-                {children}
-              </div>
-            </SidebarInset>
-            <Toaster position="top-center" />
-          </SidebarProvider>
-        </body>
-      </html>
+              </SidebarInset>
+              <Toaster position="top-center" />
+            </SidebarProvider>
+          </body>
+        </html>
+      </StreamProvider>
     </Providers>
   );
 }

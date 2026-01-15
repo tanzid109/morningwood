@@ -5,11 +5,13 @@
 import LatestStreams from "@/pages/Live/LatestStreams";
 import LiveStream from "@/pages/Live/LiveStream";
 
+export const dynamic = 'force-dynamic';
+
 const page = () => {
     return (
         <div>
             <LiveStream />
-            <LatestStreams/>
+            <LatestStreams />
             {/* <GamingStreams /> */}
             {/* <IRL /> */}
         </div>

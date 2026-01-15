@@ -1,10 +1,12 @@
 import StreamPlayer from '@/pages/StreamPlayer/StreamPlayer';
 import React from 'react';
 
+export const dynamic = 'force-dynamic';
+
 const page = () => {
     return (
         <div>
-            <StreamPlayer/>
+            <StreamPlayer />
         </div>
     );
 };

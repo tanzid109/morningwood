@@ -10,6 +10,8 @@ import Image from "next/image";
 import Providers from "@/Provider/Providers";
 import LoggedUser from "@/auth/loggedUser/LoggedUser";
 
+export const dynamic = 'force-dynamic';
+
 const sora = Sora({
   variable: "--font-sora",
   subsets: ["latin"],
@@ -62,7 +64,7 @@ export default function RootLayout({
                 </div>
 
                 {/* Right section */}
-                <LoggedUser/>
+                <LoggedUser />
               </header>
               <div className="px-4 md:px-8">
                 {children}

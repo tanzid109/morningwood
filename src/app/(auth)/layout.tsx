@@ -4,6 +4,8 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import Providers from "@/Provider/Providers";
 
+export const dynamic = 'force-dynamic';
+
 const sora = Sora({
   variable: "--font-sora",
   subsets: ["latin"],

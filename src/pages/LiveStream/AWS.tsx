@@ -1,4 +1,3 @@
-
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 import { useEffect, useState } from 'react';
@@ -19,6 +18,7 @@ import { getIngestConfig, goLiveStream, stopLiveStream } from '@/Server/Live';
 import { toast } from 'sonner';
 import { useStream } from '@/Context/StreamContext';
 import { useRef } from "react";
+// import dynamic from 'next/dynamic';
 
 interface StreamFormData {
     title: string;
@@ -30,7 +30,7 @@ interface StreamFormData {
     isMature: boolean;
 }
 
-export default function AWSStreamCreationForm() {
+export function AWSStreamCreationForm() {
     const [step, setStep] = useState<1 | 2>(1);
     const [isOpen, setIsOpen] = useState(false);
     const [categories, setCategories] = useState<Array<{ _id: string; name: string }>>([]);
@@ -38,6 +38,7 @@ export default function AWSStreamCreationForm() {
     const [isInitializing, setIsInitializing] = useState(false);
     const [isGoingLive, setIsGoingLive] = useState(false);
     const [isStopping, setIsStopping] = useState(false);
+    const [isMounted, setIsMounted] = useState(false);
 
     // Media controls
     const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
@@ -60,6 +61,11 @@ export default function AWSStreamCreationForm() {
         screenStreamRef,
         microphoneStreamRef,
     } = useStream();
+
+    // Only run on client side
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
 
     // Fetch categories on mount
     useEffect(() => {
@@ -84,7 +90,7 @@ export default function AWSStreamCreationForm() {
 
     // Initialize IVS config when dialog opens
     useEffect(() => {
-        if (isOpen && !ivsConfig) {
+        if (isOpen && !ivsConfig && isMounted) {
             const fetchIvsConfig = async () => {
                 try {
                     setIsInitializing(true);
@@ -99,7 +105,7 @@ export default function AWSStreamCreationForm() {
             };
             fetchIvsConfig();
         }
-    }, [isOpen, ivsConfig]);
+    }, [isOpen, ivsConfig, isMounted]);
 
     const {
         register,
@@ -458,18 +464,10 @@ export default function AWSStreamCreationForm() {
         }
     };
 
-    // Cleanup on unmount
-    // useEffect(() => {
-    //     return () => {
-    //         if (isLive) {
-    //             console.log('🧹 Component unmounting, cleaning up...');
-    //             if (clientRef.current) {
-    //                 clientRef.current.stopBroadcast().catch(console.error);
-    //             }
-    //             stopAllMediaTracks();
-    //         }
-    //     };
-    // }, [isLive]);
+    // Don't render until mounted (client-side only)
+    if (!isMounted) {
+        return null;
+    }
 
     return (
         <div className="flex flex-col items-center justify-center gap-4">

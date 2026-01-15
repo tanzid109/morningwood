@@ -6,10 +6,12 @@ import CategoryCarousel from '@/pages/explore/CategorieyCarousel';
 import LiveStream from '@/pages/Live/LiveStream';
 import React from 'react';
 
+export const dynamic = 'force-dynamic';
+
 const page = () => {
     return (
         <div>
-            <CategoryCarousel/>
+            <CategoryCarousel />
             <LiveStream />
             {/* <LatestStreams />
             <GamingStreams />
