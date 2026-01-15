@@ -10,7 +10,6 @@ import { Separator } from '@/components/ui/separator';
 import { Card } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Input } from '@/components/ui/input';
-import LiveStreamStats from './LiveStreamStats';
 
 export default function WebCam() {
 
@@ -20,8 +19,6 @@ export default function WebCam() {
 
                 {/* Video Player Section */}
                 <div className="flex-1">
-                    <LiveStreamStats />
-
                     <div className="relative w-full aspect-video bg-[#1A0D09] rounded-2xl">
                         {/* Bottom Controls */}
                         <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center justify-between 

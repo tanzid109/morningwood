@@ -16,9 +16,9 @@ import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/components/
 import { Upload, Check, Radio, Loader2, Monitor, Video, Mic, MicOff, VideoOff } from 'lucide-react';
 import { getCategories } from '@/Server/Categories';
 import { getIngestConfig, goLiveStream, stopLiveStream } from '@/Server/Live';
-import IVSBroadcastClient from 'amazon-ivs-web-broadcast';
 import { toast } from 'sonner';
 import { useStream } from '@/Context/StreamContext';
+import { useRef } from "react";
 
 interface StreamFormData {
     title: string;
@@ -41,7 +41,7 @@ export default function AWSStreamCreationForm() {
 
     // Media controls
     const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
-
+    const ivsRef = useRef<any>(null);
 
     const {
         isLive,
@@ -143,10 +143,23 @@ export default function AWSStreamCreationForm() {
         try {
             console.log('🎥 Initializing broadcast client...');
 
-            const client = IVSBroadcastClient.create({
-                streamConfig: IVSBroadcastClient.BASIC_LANDSCAPE,
+            if (typeof window === "undefined") {
+                throw new Error("IVS can only run in browser");
+            }
+
+            // ✅ Load IVS only in browser at runtime
+            if (!ivsRef.current) {
+                const ivsModule = await import("amazon-ivs-web-broadcast");
+                ivsRef.current = ivsModule.default ?? ivsModule;
+            }
+
+            const IVS = ivsRef.current;
+
+            const client = IVS.create({
+                streamConfig: IVS.BASIC_LANDSCAPE,
                 ingestEndpoint: ivsConfig.ingestServer,
             });
+
             clientRef.current = client;
 
             if (canvasRef.current) {
@@ -160,6 +173,7 @@ export default function AWSStreamCreationForm() {
             throw new Error(`Failed to initialize broadcast: ${error.message}`);
         }
     };
+
 
     const setupMicrophone = async () => {
         if (!clientRef.current) return;
@@ -207,7 +221,7 @@ export default function AWSStreamCreationForm() {
                 console.log('✅ Camera turned off');
             } else {
                 console.log('📹 Requesting camera access...');
-                const streamConfig = IVSBroadcastClient.BASIC_LANDSCAPE;
+                const streamConfig = ivsRef.current.BASIC_LANDSCAPE;
 
                 try {
                     cameraStreamRef.current = await navigator.mediaDevices.getUserMedia({
@@ -258,7 +272,7 @@ export default function AWSStreamCreationForm() {
                 console.log('✅ Screen share stopped');
             } else {
                 console.log('🖥️ Requesting screen share access...');
-                const streamConfig = IVSBroadcastClient.BASIC_LANDSCAPE;
+                const streamConfig = ivsRef.current.BASIC_LANDSCAPE;
 
                 try {
                     screenStreamRef.current = await navigator.mediaDevices.getDisplayMedia({

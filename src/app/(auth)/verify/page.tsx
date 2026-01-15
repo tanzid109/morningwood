@@ -1,11 +1,11 @@
 import VerifyForm from '@/auth/verify/VerifyForm';
-import React from 'react';
+import { Suspense } from 'react';
 
 const page = () => {
     return (
-        <div>
+        <Suspense fallback={<div>Loading...</div>}>
             <VerifyForm/>
-        </div>
+        </Suspense>
     );
 };
 

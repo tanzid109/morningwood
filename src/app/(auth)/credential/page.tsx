@@ -1,10 +1,11 @@
 import CredentialForm from '@/auth/credential/UserCredential';
+import { Suspense } from 'react';
 
 const page = () => {
     return (
-        <div>
+        <Suspense fallback={<div>Loading...</div>}>
             <CredentialForm/>
-        </div>
+        </Suspense>
     );
 };
 

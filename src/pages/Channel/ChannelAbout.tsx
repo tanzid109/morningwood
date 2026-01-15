@@ -31,10 +31,23 @@ interface ChannelDetails {
 }
 
 interface ChannelAboutProps {
-    channelDetails: ChannelDetails;
+    channelDetails?: ChannelDetails;
 }
 
 const ChannelAbout = ({ channelDetails }: ChannelAboutProps) => {
+    // Handle case where channelDetails is undefined
+    if (!channelDetails) {
+        return (
+            <div className='flex'>
+                <Card className="bg-[#36190F] p-5 w-full flex mb-5">
+                    <CardContent className="pt-6">
+                        <p className="text-amber-50/70 italic">Loading channel information...</p>
+                    </CardContent>
+                </Card>
+            </div>
+        );
+    }
+
     // Map platform names to icons
     const getPlatformIcon = (platform: string) => {
         const iconMap: { [key: string]: React.ReactNode } = {
