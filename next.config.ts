@@ -1,4 +1,6 @@
-const nextConfig = {
+import type { NextConfig } from 'next';
+
+const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
@@ -18,6 +20,15 @@ const nextConfig = {
       },
     ],
   },
+  // Empty turbopack config to silence the warning
+  turbopack: {},
+  // Keep webpack config for compatibility
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      config.externals = [...(config.externals || []), 'amazon-ivs-web-broadcast'];
+    }
+    return config;
+  },
 };
 
-module.exports = nextConfig;
+export default nextConfig;
