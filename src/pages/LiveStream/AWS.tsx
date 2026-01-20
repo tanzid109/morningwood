@@ -30,7 +30,7 @@ interface StreamFormData {
     isMature: boolean;
 }
 
-export function AWSStreamCreationForm() {
+const AWSStreamCreationForm = () => {
     const [step, setStep] = useState<1 | 2>(1);
     const [isOpen, setIsOpen] = useState(false);
     const [categories, setCategories] = useState<Array<{ _id: string; name: string }>>([]);
@@ -856,3 +856,5 @@ export function AWSStreamCreationForm() {
         </div>
     );
 }
+
+export default AWSStreamCreationForm;

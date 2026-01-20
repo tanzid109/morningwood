@@ -1,6 +1,7 @@
 // import WebCam from '@/pages/LiveStream/WebCam';
 
-import { AWSStreamCreationForm } from "@/pages/LiveStream/AWS";
+import AWSStreamCreationForm from "@/pages/LiveStream/AWS";
+
 
 export const dynamic = 'force-dynamic';
 
