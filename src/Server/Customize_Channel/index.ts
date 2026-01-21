@@ -43,14 +43,14 @@ export const ChannelPhotoCustomize = async (formData: FormData) => {
         }
 
         const userId = decodedToken.id;
-        console.log("User ID:", userId);
+        // console.log("User ID:", userId);
 
         // Get files from FormData
         const profilePhoto = formData.get("profilePhoto") as File | null
         const coverPhoto = formData.get("coverPhoto") as File | null
 
-        console.log("Profile photo:", profilePhoto?.name, profilePhoto?.size);
-        console.log("Cover photo:", coverPhoto?.name, coverPhoto?.size);
+        // console.log("Profile photo:", profilePhoto?.name, profilePhoto?.size);
+        // console.log("Cover photo:", coverPhoto?.name, coverPhoto?.size);
 
         // Create new FormData for the API request
         const apiFormData = new FormData()
@@ -73,7 +73,7 @@ export const ChannelPhotoCustomize = async (formData: FormData) => {
         }
 
         const apiUrl = `${process.env.NEXT_PUBLIC_BASE_API}/api/v1/users/${userId}/channel-photos`;
-        console.log("API URL:", apiUrl);
+        // console.log("API URL:", apiUrl);
 
         const res = await fetch(apiUrl, {
             method: "PATCH",
@@ -86,7 +86,7 @@ export const ChannelPhotoCustomize = async (formData: FormData) => {
             cache: "no-store",
         })
 
-        console.log("Response status:", res.status);
+        // console.log("Response status:", res.status);
 
         if (!res.ok) {
             const errorText = await res.text();
@@ -106,7 +106,7 @@ export const ChannelPhotoCustomize = async (formData: FormData) => {
         }
 
         const data = await res.json()
-        console.log("Success response:", data);
+        // console.log("Success response:", data);
 
         return {
             success: true,
@@ -145,7 +145,7 @@ export const ChannelInfoCustomize = async (formData: FieldValues) => {
         }
 
         const userId = decodedToken.id;
-        console.log(userId);
+        // console.log(userId);
 
         const res = await fetch(
             `${process.env.NEXT_PUBLIC_BASE_API}/api/v1/users/${userId}/channel-info`,
@@ -207,7 +207,7 @@ export const createChannelSocialInfo = async (formData: FieldValues) => {
         }
 
         const userId = decodedToken.id;
-        console.log(userId);
+        // console.log(userId);
 
         const res = await fetch(
             `${process.env.NEXT_PUBLIC_BASE_API}/api/v1/users/${userId}/social-accounts`,

@@ -79,7 +79,7 @@ const getTimeAgo = (dateString: string): string => {
 
 const LatestStreams = async () => {
     const response = await getAllRecordedStreams() as ApiResponse;
-    console.log(response);
+    // console.log(response);
 
     // Handle error case
     if (!response.success || !response.data) {

@@ -102,7 +102,7 @@ export default function StreamPlayer() {
         const video = videoRef.current;
 
         if (!video || !streamData?.playbackUrl) {
-            console.log("Video element or playback URL not ready");
+            // console.log("Video element or playback URL not ready");
             return;
         }
 
@@ -119,7 +119,7 @@ export default function StreamPlayer() {
             hls.attachMedia(video);
 
             hls.on(Hls.Events.MANIFEST_PARSED, () => {
-                console.log("✅ Manifest loaded");
+                // console.log("✅ Manifest loaded");
                 video.play().catch(err => {
                     console.warn("⚠️ Autoplay prevented:", err);
                     // User needs to click play manually
@@ -148,7 +148,7 @@ export default function StreamPlayer() {
             });
 
             return () => {
-                console.log("🧹 Cleaning up HLS");
+                // console.log("🧹 Cleaning up HLS");
                 if (hls) {
                     hls.destroy();
                 }
@@ -157,7 +157,7 @@ export default function StreamPlayer() {
             // Native HLS support (Safari)
             video.src = streamData.playbackUrl;
             video.addEventListener('loadedmetadata', () => {
-                console.log("✅ Video metadata loaded");
+                // console.log("✅ Video metadata loaded");
             });
             video.play().catch(err => {
                 console.warn("⚠️ Autoplay prevented:", err);

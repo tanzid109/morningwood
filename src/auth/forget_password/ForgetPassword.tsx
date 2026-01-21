@@ -35,7 +35,7 @@ export default function ForgetPasswordForm() {
 
     const onSubmit: SubmitHandler<FieldValues> = async (data) => {
         try {
-            console.log(data);
+            // console.log(data);
             const res = await forgotUser(data);
             if (res?.success) {
                 router.push(`/verify?token=${res.data.resetToken}`);
@@ -43,7 +43,7 @@ export default function ForgetPasswordForm() {
             } else {
                 toast.error(res?.message || "Failed to send verification code");
             }
-            console.log(res);
+            // console.log(res);
         } catch (error) {
             console.error(error);
             toast.error("An error occurred. Please try again.");

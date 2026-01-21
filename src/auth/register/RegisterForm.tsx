@@ -41,7 +41,7 @@ export default function RegisterForm() {
             };
 
             const res = await createUser(registrationData);
-            console.log("Server Response:", res);
+            // console.log("Server Response:", res);
 
             if (res?.success) {
                 router.push(`/otp?token=${res.data.signupToken}`);

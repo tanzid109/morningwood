@@ -41,7 +41,7 @@ export default function OtpForm() {
             if (res.success) {
                 router.push(`/credential?token=${signupToken}`);
                 toast.success(res.message);
-                console.log(res);
+                // console.log(res);
             } else {
                 toast.error(res.message);
             }
@@ -61,7 +61,7 @@ export default function OtpForm() {
                 toast.error(res.message);
                 return;
             }
-            console.log(res);
+            // console.log(res);
             toast.success("OTP resent successfully!");
 
             // Start 60 sec timer

@@ -195,7 +195,7 @@ export default function LiveStreamPlayer() {
         const video = videoRef.current;
 
         if (!video || !streamData?.playbackUrl) {
-            console.log('Video element or playback URL not ready');
+            // console.log('Video element or playback URL not ready');
             return;
         }
 
@@ -214,7 +214,7 @@ export default function LiveStreamPlayer() {
             hls.attachMedia(video);
 
             hls.on(Hls.Events.MANIFEST_PARSED, () => {
-                console.log('✅ Live manifest loaded');
+                // console.log('✅ Live manifest loaded');
                 video.play().catch((err) => {
                     console.warn('⚠️ Autoplay prevented:', err);
                 });
@@ -242,7 +242,7 @@ export default function LiveStreamPlayer() {
             });
 
             return () => {
-                console.log('🧹 Cleaning up HLS');
+                // console.log('🧹 Cleaning up HLS');
                 if (hls) {
                     hls.destroy();
                 }
@@ -251,7 +251,7 @@ export default function LiveStreamPlayer() {
             // Native HLS support (Safari)
             video.src = streamData.playbackUrl;
             video.addEventListener('loadedmetadata', () => {
-                console.log('✅ Video metadata loaded');
+                // console.log('✅ Video metadata loaded');
             });
             video.play().catch((err) => {
                 console.warn('⚠️ Autoplay prevented:', err);

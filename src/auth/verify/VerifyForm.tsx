@@ -38,11 +38,11 @@ export default function VerifyForm() {
                 otp: data.otp,
                 resetToken: resetToken,  
             });
-            console.log(res);
+            // console.log(res);
             if (res.success) {
                 router.push(`/reset?token=${resetToken}`);
                 toast.success(res.message);
-                console.log(res);
+                // console.log(res);
             } else {
                 toast.error(res.message);
             }

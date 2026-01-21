@@ -96,7 +96,7 @@ const AWSStreamCreationForm = () => {
                     setIsInitializing(true);
                     const config = await getIngestConfig();
                     setIvsConfig(config.data);
-                    console.log('✅ IVS Config loaded:', config.data);
+                    // console.log('✅ IVS Config loaded:', config.data);
                 } catch (error) {
                     console.error('❌ Failed to fetch IVS config:', error);
                 } finally {
@@ -147,7 +147,7 @@ const AWSStreamCreationForm = () => {
 
     const initializeBroadcastClient = async () => {
         try {
-            console.log('🎥 Initializing broadcast client...');
+            // console.log('🎥 Initializing broadcast client...');
 
             if (typeof window === "undefined") {
                 throw new Error("IVS can only run in browser");
@@ -170,7 +170,7 @@ const AWSStreamCreationForm = () => {
 
             if (canvasRef.current) {
                 client.attachPreview(canvasRef.current);
-                console.log('📺 Preview attached to canvas');
+                // console.log('📺 Preview attached to canvas');
             }
 
             return client;
@@ -185,7 +185,7 @@ const AWSStreamCreationForm = () => {
         if (!clientRef.current) return;
 
         try {
-            console.log('🎤 Requesting microphone access...');
+            // console.log('🎤 Requesting microphone access...');
             microphoneStreamRef.current = await navigator.mediaDevices.getUserMedia({
                 audio: {
                     echoCancellation: true,
@@ -197,7 +197,7 @@ const AWSStreamCreationForm = () => {
 
             clientRef.current.addAudioInputDevice(microphoneStreamRef.current, 'mic1');
             setIsAudioEnabled(true);
-            console.log('✅ Microphone added');
+            // console.log('✅ Microphone added');
         } catch (error: any) {
             console.error('❌ Microphone setup failed:', error);
             if (error.name === 'NotAllowedError' || error.name === 'PermissionDeniedError') {
@@ -215,7 +215,7 @@ const AWSStreamCreationForm = () => {
 
         try {
             if (isCameraActive) {
-                console.log('📹 Turning off camera...');
+                // console.log('📹 Turning off camera...');
                 clientRef.current.removeVideoInputDevice('camera1');
 
                 if (cameraStreamRef.current) {
@@ -224,9 +224,9 @@ const AWSStreamCreationForm = () => {
                 }
 
                 setIsCameraActive(false);
-                console.log('✅ Camera turned off');
+                // console.log('✅ Camera turned off');
             } else {
-                console.log('📹 Requesting camera access...');
+                // console.log('📹 Requesting camera access...');
                 const streamConfig = ivsRef.current.BASIC_LANDSCAPE;
 
                 try {
@@ -243,7 +243,7 @@ const AWSStreamCreationForm = () => {
                     clientRef.current.addVideoInputDevice(cameraStreamRef.current, 'camera1', { index });
 
                     setIsCameraActive(true);
-                    console.log('✅ Camera turned on');
+                    // console.log('✅ Camera turned on');
                 } catch (permissionError: any) {
                     console.error('❌ Camera permission denied:', permissionError);
                     if (permissionError.name === 'NotAllowedError' || permissionError.name === 'PermissionDeniedError') {
@@ -266,7 +266,7 @@ const AWSStreamCreationForm = () => {
 
         try {
             if (isScreenSharing) {
-                console.log('🖥️ Stopping screen share...');
+                // console.log('🖥️ Stopping screen share...');
                 clientRef.current.removeVideoInputDevice('screen1');
 
                 if (screenStreamRef.current) {
@@ -275,9 +275,9 @@ const AWSStreamCreationForm = () => {
                 }
 
                 setIsScreenSharing(false);
-                console.log('✅ Screen share stopped');
+                // console.log('✅ Screen share stopped');
             } else {
-                console.log('🖥️ Requesting screen share access...');
+                // console.log('🖥️ Requesting screen share access...');
                 const streamConfig = ivsRef.current.BASIC_LANDSCAPE;
 
                 try {
@@ -294,7 +294,7 @@ const AWSStreamCreationForm = () => {
                     clientRef.current.addVideoInputDevice(screenStreamRef.current, 'screen1', { index });
 
                     setIsScreenSharing(true);
-                    console.log('✅ Screen share started');
+                    // console.log('✅ Screen share started');
 
                     screenStreamRef.current.getVideoTracks()[0].onended = () => {
                         toggleScreenShare();
@@ -332,7 +332,7 @@ const AWSStreamCreationForm = () => {
 
         track.enabled = !track.enabled;
         setIsAudioEnabled(track.enabled);
-        console.log(track.enabled ? '🔊 Audio enabled' : '🔇 Audio muted');
+        // console.log(track.enabled ? '🔊 Audio enabled' : '🔇 Audio muted');
     };
 
     const onSubmit = async (data: StreamFormData) => {
@@ -345,9 +345,9 @@ const AWSStreamCreationForm = () => {
             setIsGoingLive(true);
 
             // Debug: Check thumbnail
-            console.log('📸 Thumbnail file:', data.thumbnail?.[0]);
-            console.log('📸 Thumbnail name:', data.thumbnail?.[0]?.name);
-            console.log('📸 Thumbnail size:', data.thumbnail?.[0]?.size);
+            // console.log('📸 Thumbnail file:', data.thumbnail?.[0]);
+            // console.log('📸 Thumbnail name:', data.thumbnail?.[0]?.name);
+            // console.log('📸 Thumbnail size:', data.thumbnail?.[0]?.size);
 
             const formData = new FormData();
             formData.append("title", data.title);
@@ -359,15 +359,15 @@ const AWSStreamCreationForm = () => {
 
             if (data.thumbnail && data.thumbnail.length > 0) {
                 formData.append("thumbnail", data.thumbnail[0]);
-                console.log('✅ Thumbnail added to FormData');
+                // console.log('✅ Thumbnail added to FormData');
             } else {
-                console.log('⚠️ No thumbnail selected');
+                // console.log('⚠️ No thumbnail selected');
             }
 
             // Debug: Log all FormData entries
-            for (const [key, value] of formData.entries()) {
-                console.log(`${key}:`, value);
-            }
+            // for (const [key, value] of formData.entries()) {
+            //     // console.log(`${key}:`, value);
+            // }
 
             const res = await goLiveStream(formData);
 
@@ -385,12 +385,12 @@ const AWSStreamCreationForm = () => {
             await setupMicrophone();
 
             // Step 4: Start broadcast
-            console.log('🚀 Starting broadcast to AWS IVS...');
+            // console.log('🚀 Starting broadcast to AWS IVS...');
             await client.startBroadcast(ivsConfig.streamKey);
 
             setIsLive(true);
             toast.success('🔴 You are now LIVE!');
-            console.log('🔴 LIVE! StreamId:', res.data.streamId);
+            // console.log('🔴 LIVE! StreamId:', res.data.streamId);
 
             // Close dialog and reset form
             setIsOpen(false);
@@ -424,7 +424,7 @@ const AWSStreamCreationForm = () => {
 
         try {
             setIsStopping(true);
-            console.log('⏹️ Stopping IVS broadcast...');
+            // console.log('⏹️ Stopping IVS broadcast...');
 
             const client = clientRef.current;
 
@@ -435,7 +435,7 @@ const AWSStreamCreationForm = () => {
 
             // Stop broadcast
             await client.stopBroadcast();
-            console.log('✅ IVS broadcast stopped');
+            // console.log('✅ IVS broadcast stopped');
 
             // Detach preview
             try { client.detachPreview(); } catch { }
@@ -452,7 +452,7 @@ const AWSStreamCreationForm = () => {
                 throw new Error(response?.message || "Failed to stop stream");
             }
 
-            console.log("✅ Stream stopped in backend");
+            // console.log("✅ Stream stopped in backend");
             setStreamId(null);
             toast.success('Stream ended successfully');
 
@@ -716,7 +716,7 @@ const AWSStreamCreationForm = () => {
                                                             const previewUrl = URL.createObjectURL(file);
                                                             setThumbnailPreview(previewUrl);
 
-                                                            console.log('✅ Thumbnail selected:', file.name, file.size, 'bytes');
+                                                            // console.log('✅ Thumbnail selected:', file.name, file.size, 'bytes');
                                                         }}
                                                     />
                                                 </div>

@@ -48,9 +48,9 @@ export default function CredentialForm() {
                 password: data.password,
                 signupToken: signupToken,
             };
-            console.log(registrationData);
+            // console.log(registrationData);
             const res = await getCredential(registrationData);
-            console.log("Server Response:", res);
+            // console.log("Server Response:", res);
             if (res?.success) {
                 router.push(`/`);
                 toast.success(res.message);

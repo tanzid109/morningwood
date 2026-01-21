@@ -24,7 +24,7 @@ const Categories = () => {
         };
         fetchCategories();
     }, []);
-    console.log(categories);
+    // console.log(categories);
     const handleClick = (_id: string) => {
         router.push(`/categories/${_id}`);
     };
@@ -36,7 +36,7 @@ const Categories = () => {
             </h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-                {categories.map((card) => (
+                {categories?.map((card) => (
                     <Card
                         key={card._id}
                         className="overflow-hidden border-0 shadow-lg bg-[#412218] cursor-pointer"

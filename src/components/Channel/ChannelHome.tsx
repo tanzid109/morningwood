@@ -13,7 +13,7 @@ const ChannelHome = async () => {
 
     const res = await getChannelDetails();
     const channelDetails = res.data;
-    console.log(channelDetails);
+    // console.log(channelDetails);
     return (
         <main>
             <header className="h-40 sm:h-44 md:h-56 lg:h-64 w-full rounded-2xl my-5 overflow-hidden">

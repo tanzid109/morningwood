@@ -24,7 +24,7 @@ const StreamingDashboard = () => {
                 setStreamKey(res.data.streamKey);
                 setStreamUrl(res.data.ingestServer);
             }
-            console.log(res);
+            // console.log(res);
             toast.success(res.message);
         };
 

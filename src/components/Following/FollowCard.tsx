@@ -53,7 +53,7 @@ export default function FollowCard() {
 
         fetchCreators();
     }, []);
-    console.log(creators);
+    // console.log(creators);
     const getInitials = (username: string) => {
         return username
             .split(" ")

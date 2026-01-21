@@ -48,7 +48,7 @@ export default function ResetPasswordForm() {
                 newPassword: data.password,
                 confirmPassword: data.Cpassword,
             });
-            console.log(res);
+            // console.log(res);
             toast.success(res.message);
             if (res.success) {
                 router.push("/login");
