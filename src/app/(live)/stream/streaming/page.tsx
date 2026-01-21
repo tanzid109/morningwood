@@ -1,5 +1,4 @@
-import StreamingDashboard from '@/pages/LiveStream/StreamDashboard';
-import React from 'react';
+import StreamingDashboard from "@/components/LiveStream/StreamDashboard";
 
 const page = () => {
     return (

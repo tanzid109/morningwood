@@ -1,5 +1,4 @@
-import StreamPlayer from '@/pages/StreamPlayer/StreamPlayer';
-import React from 'react';
+import StreamPlayer from "@/components/StreamPlayer/StreamPlayer";
 
 export const dynamic = 'force-dynamic';
 

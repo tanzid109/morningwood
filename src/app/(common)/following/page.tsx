@@ -1,6 +1,5 @@
-import FollowCard from '@/pages/Following/FollowCard';
-import LatestStreams from '@/pages/Live/LatestStreams';
-import React from 'react';
+import FollowCard from "@/components/Following/FollowCard";
+import LatestStreams from "@/components/Live/LatestStreams";
 
 export const dynamic = 'force-dynamic';
 

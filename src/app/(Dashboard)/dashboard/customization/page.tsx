@@ -1,5 +1,4 @@
-import ChannelCustomize from '@/pages/Dashboard/Customize/ChannelCustomize';
-import React from 'react';
+import ChannelCustomize from "@/components/Dashboard/Customize/ChannelCustomize";
 
 const page = () => {
     return (

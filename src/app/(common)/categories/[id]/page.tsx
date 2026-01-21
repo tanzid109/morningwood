@@ -1,5 +1,4 @@
-import CategoryDetails from '@/pages/categories/CategoryDetails';
-import React from 'react';
+import CategoryDetails from "@/components/categories/CategoryDetails";
 
 export const dynamic = 'force-dynamic';
 

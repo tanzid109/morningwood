@@ -1,10 +1,9 @@
-import StremedVideoTable from '@/pages/Dashboard/Videos/StreamedVideos';
-import React from 'react';
+import ContentTable from '@/components/Dashboard/Videos/StreamedVideos';
 
 const page = () => {
     return (
         <div>
-            <StremedVideoTable />
+            <ContentTable />
         </div>
     );
 };

@@ -1,17 +1,17 @@
-import CategoryCarousel from '@/pages/explore/CategorieyCarousel';
 // import Recomendend from '@/pages/explore/Recomendend';
 // import GamingStreams from '@/pages/Live/GamingStreams';
 // import IRL from '@/pages/Live/IRL';
 // import LatestStreams from '@/pages/Live/LatestStreams';
-import LiveStream from '@/pages/Live/LiveStream';
-import React from 'react';
+
+import CategoryCarousel from "@/components/explore/CategorieyCarousel";
+import LiveStream from "@/components/Live/LiveStream";
 
 export const dynamic = 'force-dynamic';
 
 const page = () => {
     return (
         <div>
-            <CategoryCarousel />
+            <CategoryCarousel/>
             <LiveStream />
             {/* <LatestStreams />
             <GamingStreams />

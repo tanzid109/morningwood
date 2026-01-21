@@ -1,4 +1,4 @@
-import AWSStreamCreationForm from '@/pages/LiveStream/AWS';
+import AWSStreamCreationForm from "@/components/LiveStream/AWS";
 
 const page = () => {
     return (

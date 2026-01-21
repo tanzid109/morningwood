@@ -1,5 +1,5 @@
-import ChannelHome from '@/pages/Channel/ChannelHome';
-import React from 'react';
+import ChannelHome from "@/components/Channel/ChannelHome";
+
 
 export const dynamic = 'force-dynamic';
 

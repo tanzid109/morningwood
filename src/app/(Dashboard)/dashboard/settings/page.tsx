@@ -1,5 +1,4 @@
-import SettingsHome from '@/pages/Dashboard/Settings/SettingsHome';
-import React from 'react';
+import SettingsHome from "@/components/Dashboard/Settings/SettingsHome";
 
 const page = () => {
     return (

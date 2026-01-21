@@ -1,7 +1,9 @@
 // import GamingStreams from '@/pages/Live/GamingStreams';
 // import IRL from '@/pages/Live/IRL';
-import LatestStreams from '@/pages/Live/LatestStreams';
-import LiveStream from '@/pages/Live/LiveStream';
+
+import LatestStreams from "@/components/Live/LatestStreams";
+import LiveStream from "@/components/Live/LiveStream";
+
 
 const Home = () => {
     return (

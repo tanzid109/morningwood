@@ -1,5 +1,4 @@
-import Categories from "@/pages/categories/Categories";
-
+import Categories from "@/components/categories/Categories";
 
 const page = () => {
     return (

@@ -1,3 +1,5 @@
+"use client";
+
 import { getCurrentUser } from "@/Server/Auth/Index";
 import { createContext, Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
 
@@ -25,7 +27,8 @@ const UserContext = createContext<IUserProviderValues | undefined>(undefined);
 const UserProvider = ({ children }: { children: React.ReactNode }) => {
     const [user, setUser] = useState<IUser | null>(null);
     const [isLoading, setIsLoading] = useState(true);
-    // console.log(user);
+    const [isMounted, setIsMounted] = useState(false);
+
     const handleUser = async () => {
         try {
             setIsLoading(true);
@@ -40,8 +43,29 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     useEffect(() => {
-        handleUser();
+        setIsMounted(true);
     }, []);
+
+    useEffect(() => {
+        if (isMounted) {
+            handleUser();
+        }
+    }, [isMounted]);
+
+    // Provide default values during SSR
+    if (!isMounted) {
+        return (
+            <UserContext.Provider value={{
+                user: null,
+                setUser,
+                isLoading: true,
+                setIsLoading,
+                handleUser
+            }}>
+                {children}
+            </UserContext.Provider>
+        );
+    }
 
     return (
         <UserContext.Provider value={{ user, setUser, isLoading, setIsLoading, handleUser }}>

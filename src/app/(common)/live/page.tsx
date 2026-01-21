@@ -2,8 +2,8 @@
 // import IRL from '@/pages/Live/IRL';
 // import LatestStreams from '@/pages/Live/LatestStreams';
 
-import LatestStreams from "@/pages/Live/LatestStreams";
-import LiveStream from "@/pages/Live/LiveStream";
+import LatestStreams from "@/components/Live/LatestStreams";
+import LiveStream from "@/components/Live/LiveStream";
 
 export const dynamic = 'force-dynamic';
 

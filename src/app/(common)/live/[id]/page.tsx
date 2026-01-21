@@ -1,5 +1,4 @@
-import LiveStreamPlayer from '@/pages/LivePlayer/LivePlayer';
-import React from 'react';
+import LiveStreamPlayer from "@/components/LivePlayer/LivePlayer";
 
 export const dynamic = 'force-dynamic';
 

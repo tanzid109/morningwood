@@ -1,4 +1,4 @@
-import CreatorDashboard from '@/pages/Dashboard/DashboardHome/CreatorDashboard';
+import CreatorDashboard from "@/components/Dashboard/DashboardHome/CreatorDashboard";
 
 const page = () => {
     return (

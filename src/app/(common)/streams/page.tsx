@@ -1,4 +1,4 @@
-import LiveStream from '@/pages/Streams/LiveStream';
+import LiveStream from "@/components/Live/LiveStream";
 
 const page = () => {
     return (
