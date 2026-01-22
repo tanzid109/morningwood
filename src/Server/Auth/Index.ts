@@ -7,8 +7,16 @@ import { jwtDecode } from "jwt-decode"
 const getSecureCookieOptions = () => ({
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "strict" as const,
+    sameSite: "lax" as const,
     maxAge: 60 * 60 * 24 * 7, // 7 days
+    path: "/",
+});
+
+const clearCookieOptions = () => ({
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax" as const,
+    maxAge: 0,
     path: "/",
 });
 
@@ -19,11 +27,21 @@ export const createUser = async (UserData: FieldValues) => {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "x-signup-token": `${signupToken}`, // ✅ Should probably be this too
+                "x-signup-token": signupToken,
             },
             body: JSON.stringify(rest),
+            credentials: "include",
             cache: "no-store",
         })
+
+        if (!res.ok) {
+            const errorData = await res.json()
+            return {
+                success: false,
+                message: errorData.message || `HTTP error! status: ${res.status}`
+            }
+        }
+
         const data = await res.json()
 
         if (data.success) {
@@ -32,7 +50,10 @@ export const createUser = async (UserData: FieldValues) => {
         return data
     } catch (error) {
         console.error("Error creating user:", error)
-        throw error
+        return {
+            success: false,
+            message: "Network error occurred"
+        }
     }
 }
 
@@ -44,11 +65,20 @@ export const getOtp = async (otpData: FieldValues) => {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "x-signup-token": signupToken, // ✅ Correct header name
+                "x-signup-token": signupToken,
             },
-            body: JSON.stringify(rest), // Only send otp in body
+            body: JSON.stringify(rest),
+            credentials: "include",
             cache: "no-store",
         })
+
+        if (!res.ok) {
+            const errorData = await res.json()
+            return {
+                success: false,
+                message: errorData.message || `HTTP error! status: ${res.status}`
+            }
+        }
 
         const data = await res.json()
         if (data.success) {
@@ -57,7 +87,10 @@ export const getOtp = async (otpData: FieldValues) => {
         return data
     } catch (error) {
         console.error("Error verifying OTP:", error)
-        throw error
+        return {
+            success: false,
+            message: "Network error occurred"
+        }
     }
 }
 
@@ -72,8 +105,17 @@ export const getCredential = async (CredentialData: FieldValues) => {
                 "x-signup-token": signupToken,
             },
             body: JSON.stringify(rest),
+            credentials: "include",
             cache: "no-store",
         })
+
+        if (!res.ok) {
+            const errorData = await res.json()
+            return {
+                success: false,
+                message: errorData.message || `HTTP error! status: ${res.status}`
+            }
+        }
 
         const data = await res.json()
         if (data.success) {
@@ -81,8 +123,11 @@ export const getCredential = async (CredentialData: FieldValues) => {
         }
         return data
     } catch (error) {
-        console.error("Error verifying OTP:", error)
-        throw error
+        console.error("Error completing signup:", error)
+        return {
+            success: false,
+            message: "Network error occurred"
+        }
     }
 }
 
@@ -162,13 +207,26 @@ export const forgotUser = async (email: FieldValues) => {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(email),
+            credentials: "include",
             cache: "no-store",
         })
+
+        if (!res.ok) {
+            const errorData = await res.json()
+            return {
+                success: false,
+                message: errorData.message || `HTTP error! status: ${res.status}`
+            }
+        }
+
         const data = await res.json()
         return data
     } catch (error) {
         console.error("Error sending mail:", error)
-        throw error
+        return {
+            success: false,
+            message: "Network error occurred"
+        }
     }
 }
 
@@ -183,8 +241,17 @@ export const verifyOtp = async (otpData: FieldValues) => {
                 "x-reset-token": resetToken,
             },
             body: JSON.stringify(rest),
+            credentials: "include",
             cache: "no-store",
         })
+
+        if (!res.ok) {
+            const errorData = await res.json()
+            return {
+                success: false,
+                message: errorData.message || `HTTP error! status: ${res.status}`
+            }
+        }
 
         const data = await res.json()
         if (data.success) {
@@ -193,7 +260,10 @@ export const verifyOtp = async (otpData: FieldValues) => {
         return data
     } catch (error) {
         console.error("Error verifying OTP:", error)
-        throw error
+        return {
+            success: false,
+            message: "Network error occurred"
+        }
     }
 }
 
@@ -208,15 +278,27 @@ export const resetUserPassword = async (passwordData: FieldValues) => {
                 "x-reset-token": resetToken,
             },
             body: JSON.stringify(rest),
+            credentials: "include",
             cache: "no-store",
         });
+
+        if (!res.ok) {
+            const errorData = await res.json()
+            return {
+                success: false,
+                message: errorData.message || `HTTP error! status: ${res.status}`
+            }
+        }
 
         const data = await res.json();
         return data;
 
     } catch (error) {
         console.error("Error resetting password:", error);
-        throw error;
+        return {
+            success: false,
+            message: "Network error occurred"
+        }
     }
 };
 
@@ -233,13 +315,7 @@ export const getCurrentUser = async () => {
     } catch (error) {
         console.error("Error decoding token:", error);
         // Clear invalid cookie
-        (await cookies()).set("accessToken", "", {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "strict",
-            maxAge: 0,
-            path: "/",
-        });
+        (await cookies()).set("accessToken", "", clearCookieOptions());
         return null;
     }
 }
@@ -263,28 +339,33 @@ export const changeUserPassword = async (passwordData: FieldValues) => {
                 "Authorization": `Bearer ${accessToken}`,
             },
             body: JSON.stringify(passwordData),
+            credentials: "include",
             cache: "no-store",
         });
+
+        if (!res.ok) {
+            const errorData = await res.json()
+            return {
+                success: false,
+                message: errorData.message || `HTTP error! status: ${res.status}`
+            }
+        }
 
         const data = await res.json();
         return data;
 
     } catch (error) {
-        console.error("Error resetting password:", error);
-        throw error;
+        console.error("Error changing password:", error);
+        return {
+            success: false,
+            message: "Network error occurred"
+        }
     }
 };
 
-// logout function
 export const logoutUser = async () => {
     try {
-        (await cookies()).set("accessToken", "", {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "strict",
-            maxAge: 0,
-            path: "/",
-        });
+        (await cookies()).set("accessToken", "", clearCookieOptions());
         return { success: true };
     } catch (error) {
         console.error("Error during logout:", error);
