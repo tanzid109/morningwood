@@ -109,13 +109,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     {user ? (
                         <div className="flex items-center gap-4">
                             <Link href="/stream">
-                                <Button className="bg-red-500 hidden md:flex">
+                                <Button className="bg-red-500">
                                     <Radio /> Go live
                                 </Button>
                             </Link>
                         </div>
                     ) : (
-                        <ButtonGroup className="hidden md:flex gap-1">
+                        <ButtonGroup className="gap-1">
                             <Link href="/login">
                                 <Button variant="outline">Sign In</Button>
                             </Link>

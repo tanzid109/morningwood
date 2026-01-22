@@ -375,7 +375,7 @@ const AWSStreamCreationForm = () => {
                 throw new Error(res?.message || "Failed to create stream");
             }
 
-            console.log("✅ Stream created:", res.data);
+            // console.log("✅ Stream created:", res.data);
             setStreamId(res?.data?.streamId || null);
 
             // Step 2: Initialize broadcast client
