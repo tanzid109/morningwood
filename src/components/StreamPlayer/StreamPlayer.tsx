@@ -320,19 +320,19 @@ export default function StreamPlayer() {
                     <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                         <div className="flex items-center gap-4">
                             <Avatar className="w-12 h-12">
-                                {streamData.creatorId.image && (
+                                {streamData.creatorId?.image && (
                                     <AvatarImage src={streamData.creatorId.image} />
                                 )}
                                 <AvatarFallback className="bg-linear-to-r from-purple-500 to-pink-500 text-white">
-                                    {streamData.creatorId.channelName.slice(0, 2).toUpperCase()}
+                                    {streamData.creatorId?.channelName.slice(0, 2).toUpperCase()}
                                 </AvatarFallback>
                             </Avatar>
                             <div>
                                 <h1 className="text-lg font-bold">
-                                    {streamData.creatorId.channelName}
+                                    {streamData.creatorId?.channelName}
                                 </h1>
                                 <p className="text-sm text-gray-400">
-                                    @{streamData.creatorId.username}
+                                    @{streamData.creatorId?.username}
                                 </p>
                             </div>
                         </div>
