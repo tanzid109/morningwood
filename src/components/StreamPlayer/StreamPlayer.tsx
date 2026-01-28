@@ -138,7 +138,7 @@ export default function StreamPlayer() {
         }
 
         const playbackUrl = streamData.playbackUrl;
-        console.log('🎬 Loading HLS from:', playbackUrl);
+        // console.log('🎬 Loading HLS from:', playbackUrl);
 
         if (Hls.isSupported()) {
             // ✅ FIX: Extract base URL to prevent path duplication
@@ -167,13 +167,13 @@ export default function StreamPlayer() {
 
                                 // Remove the duplicated portion
                                 context.url = context.url.replace(/\/media\/hls\/.*?(\/media\/hls\/)/, '$1');
-                                console.log('✅ Fixed URL to:', context.url);
+                                // console.log('✅ Fixed URL to:', context.url);
                             }
 
                             // If URL is relative, build it from base
                             if (!context.url.startsWith('http')) {
                                 context.url = baseUrl + context.url.replace(/^\.\//, '');
-                                console.log('🔗 Resolved relative URL to:', context.url);
+                                // console.log('🔗 Resolved relative URL to:', context.url);
                             }
                         }
 
@@ -188,7 +188,7 @@ export default function StreamPlayer() {
             hls.attachMedia(video);
 
             hls.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
-                console.log('✅ Manifest parsed:', data.levels.length, 'quality levels');
+                // console.log('✅ Manifest parsed:', data.levels.length, 'quality levels');
                 setVideoError(null);
                 video.play().catch(() => {
                     // Autoplay prevented
@@ -197,7 +197,7 @@ export default function StreamPlayer() {
 
             hls.on(Hls.Events.FRAG_LOADING, (event, data) => {
                 // Log fragment URLs being loaded
-                console.log('📦 Loading fragment:', data.frag.url);
+                // console.log('📦 Loading fragment:', data.frag.url);
             });
 
             hls.on(Hls.Events.ERROR, (event, data) => {
@@ -243,11 +243,11 @@ export default function StreamPlayer() {
             };
         } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
             // Safari native HLS
-            console.log('🍎 Using Safari native HLS');
+            // console.log('🍎 Using Safari native HLS');
             video.src = playbackUrl;
 
             const loadedHandler = () => {
-                console.log('✅ Video loaded');
+                // console.log('✅ Video loaded');
                 setVideoError(null);
             };
 
