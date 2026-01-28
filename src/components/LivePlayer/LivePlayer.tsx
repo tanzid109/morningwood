@@ -370,7 +370,7 @@ export default function LiveStreamPlayer() {
                         <div className="absolute top-4 right-4 flex items-center gap-2 bg-black/70 backdrop-blur-sm px-3 py-1.5 rounded-full">
                             <Eye className="w-4 h-4 text-red-500" />
                             <span className="font-semibold text-sm">
-                                {streamData.currentViewers.toLocaleString()}
+                                {streamData.currentViewers?.toLocaleString()}
                             </span>
                         </div>
                     )}
@@ -398,12 +398,12 @@ export default function LiveStreamPlayer() {
                         <div className="bg-[#36190F] flex items-center text-sm py-1.5 px-3 rounded-full flex-wrap gap-2">
                             <span className="flex items-center gap-1">
                                 <Eye className="w-4 h-4" />
-                                {streamData.currentViewers.toLocaleString()} watching
+                                {streamData.currentViewers?.toLocaleString()} watching
                             </span>
                             <Minus className="rotate-90 hidden sm:block" />
                             <span className="flex items-center gap-1">
                                 <Users className="w-4 h-4" />
-                                Peak: {streamData.peakViewers.toLocaleString()}
+                                Peak: {streamData.peakViewers?.toLocaleString()}
                             </span>
                             <Minus className="rotate-90 hidden sm:block" />
                             <span>Started {getTimeAgo(streamData.startedAt)}</span>
@@ -424,7 +424,7 @@ export default function LiveStreamPlayer() {
                                     ) : (
                                         <ThumbsUp className={`w-4 h-4 ${liked ? 'fill-current' : ''}`} />
                                     )}
-                                    {streamData.totalLikes.toLocaleString()}
+                                    {streamData.totalLikes?.toLocaleString()}
                                 </Button>
                                 <Button className="gap-2">
                                     <ThumbsDown className="w-4 h-4" />
@@ -466,7 +466,7 @@ export default function LiveStreamPlayer() {
                                     @{streamData.creatorId?.username}
                                 </p>
                                 <p className="text-xs text-gray-500 mt-0.5">
-                                    {streamData.creatorId?.creatorStats.totalFollowers.toLocaleString()} followers • {streamData.creatorId?.creatorStats.totalStreams} streams
+                                    {streamData.creatorId?.creatorStats.totalFollowers?.toLocaleString()} followers • {streamData.creatorId?.creatorStats.totalStreams} streams
                                 </p>
                             </div>
                         </div>
@@ -490,7 +490,7 @@ export default function LiveStreamPlayer() {
                         <>
                             <span className="text-gray-600">•</span>
                             <span className="text-sm text-gray-400">
-                                Total Views: {streamData.totalViews.toLocaleString()}
+                                Total Views: {streamData.totalViews?.toLocaleString()}
                             </span>
                         </>
                     )}

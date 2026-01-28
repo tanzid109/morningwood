@@ -49,7 +49,8 @@ export default function RootLayout({
                         <Image
                           src="/assets/logo.png"
                           alt="Logo"
-                          fill
+                          width={64}
+                          height={64}
                           className="object-contain"
                         />
                       </Link>

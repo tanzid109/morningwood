@@ -109,7 +109,7 @@ const LatestStreams = async () => {
                             title={stream.title}
                             category={stream.categoryId?.name || 'Uncategorized'}
                             streamer={streamerName}
-                            followers={`${followers.toLocaleString()}`}
+                            followers={`${followers?.toLocaleString()}`}
                             viewers={stream.currentViewers}
                             startedAgo={getTimeAgo(stream.startedAt)}
                             thumbnail={stream.thumbnail}

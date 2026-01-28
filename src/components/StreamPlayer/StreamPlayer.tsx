@@ -102,24 +102,31 @@ export default function StreamPlayer() {
         const video = videoRef.current;
 
         if (!video || !streamData?.playbackUrl) {
-            // console.log("Video element or playback URL not ready");
             return;
+        }
+
+        // Fix duplicate path in URL if present
+        let cleanUrl = streamData.playbackUrl;
+        const duplicatePattern = /(\/media\/hls\/master\.m3u8)\/media\/hls\/master\.m3u8$/;
+        if (duplicatePattern.test(cleanUrl)) {
+            cleanUrl = cleanUrl.replace(duplicatePattern, '$1');
+            console.log('Fixed duplicate URL:', cleanUrl);
         }
 
         let hls: Hls | null = null;
 
         if (Hls.isSupported()) {
             hls = new Hls({
-                lowLatencyMode: false, // Try disabling this first
+                lowLatencyMode: false,
                 enableWorker: true,
                 debug: false,
             });
 
-            hls.loadSource(streamData.playbackUrl);
+            hls.loadSource(cleanUrl);
             hls.attachMedia(video);
 
             hls.on(Hls.Events.MANIFEST_PARSED, () => {
-                // console.log("✅ Manifest loaded");
+                console.log("✅ Manifest loaded");
                 video.play().catch(err => {
                     console.warn("⚠️ Autoplay prevented:", err);
                     // User needs to click play manually
@@ -148,16 +155,16 @@ export default function StreamPlayer() {
             });
 
             return () => {
-                // console.log("🧹 Cleaning up HLS");
+                console.log("🧹 Cleaning up HLS");
                 if (hls) {
                     hls.destroy();
                 }
             };
         } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
             // Native HLS support (Safari)
-            video.src = streamData.playbackUrl;
+            video.src = cleanUrl;
             video.addEventListener('loadedmetadata', () => {
-                // console.log("✅ Video metadata loaded");
+                console.log("✅ Video metadata loaded");
             });
             video.play().catch(err => {
                 console.warn("⚠️ Autoplay prevented:", err);
@@ -208,7 +215,6 @@ export default function StreamPlayer() {
             );
 
             if (res.ok) {
-                // const result = await res.json();
                 // Toggle like state
                 if (liked) {
                     setLiked(false);
@@ -284,7 +290,7 @@ export default function StreamPlayer() {
 
                     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mt-3">
                         <div className="bg-[#36190F] flex items-center text-sm py-1.5 px-3 rounded-full flex-wrap gap-2">
-                            <span>{streamData.totalViews.toLocaleString()} views</span>
+                            <span>{streamData.totalViews?.toLocaleString()} views</span>
                             <Minus className="rotate-90 hidden sm:block" />
                             <span>Duration: {formatDuration(streamData.durationSeconds)}</span>
                             <Minus className="rotate-90 hidden sm:block" />
@@ -298,7 +304,7 @@ export default function StreamPlayer() {
                                     onClick={handleLike}
                                 >
                                     <ThumbsUp className="w-4 h-4" />
-                                    {likeCount.toLocaleString()}
+                                    {likeCount?.toLocaleString()}
                                 </Button>
                                 <Button
                                     className={`gap-2 ${disliked ? 'bg-gray-600' : ''}`}
