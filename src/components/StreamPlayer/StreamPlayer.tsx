@@ -16,6 +16,9 @@ import { ButtonGroup } from '@/components/ui/button-group';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useParams } from 'next/navigation';
+import { dislikeLiveStream, likeLiveStream } from '@/Server/Live';
+import { toast } from 'sonner';
+import { useUser } from '@/Context/UserContext';
 
 interface Creator {
     _id: string;
@@ -66,6 +69,8 @@ export default function StreamPlayer() {
     const [disliked, setDisliked] = useState(false);
     const [likeCount, setLikeCount] = useState(0);
 
+    const { user } = useUser()
+
     // Fetch stream data
     useEffect(() => {
         const abortController = new AbortController();
@@ -87,6 +92,7 @@ export default function StreamPlayer() {
                         },
                         cache: 'no-store',
                         signal: abortController.signal,
+
                     }
                 );
 
@@ -159,7 +165,7 @@ export default function StreamPlayer() {
                     load(context: any, config: any, callbacks: any) {
                         // Fix URL if it has duplicated path
                         if (context.url) {
-                            const originalUrl = context.url;
+                            // const originalUrl = context.url;
 
                             // Check for duplication pattern
                             if (context.url.includes('/media/hls/') && context.url.match(/\/media\/hls\/.*\/media\/hls\//)) {
@@ -187,18 +193,18 @@ export default function StreamPlayer() {
             hls.loadSource(playbackUrl);
             hls.attachMedia(video);
 
-            hls.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
-                // console.log('✅ Manifest parsed:', data.levels.length, 'quality levels');
-                setVideoError(null);
-                video.play().catch(() => {
-                    // Autoplay prevented
-                });
-            });
+            // hls.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
+            //     // console.log('✅ Manifest parsed:', data.levels.length, 'quality levels');
+            //     setVideoError(null);
+            //     video.play().catch(() => {
+            //         // Autoplay prevented
+            //     });
+            // });
 
-            hls.on(Hls.Events.FRAG_LOADING, (event, data) => {
-                // Log fragment URLs being loaded
-                // console.log('📦 Loading fragment:', data.frag.url);
-            });
+            // hls.on(Hls.Events.FRAG_LOADING, (event, data) => {
+            //     // Log fragment URLs being loaded
+            //     // console.log('📦 Loading fragment:', data.frag.url);
+            // });
 
             hls.on(Hls.Events.ERROR, (event, data) => {
                 console.error('❌ HLS Error:', {
@@ -303,39 +309,65 @@ export default function StreamPlayer() {
 
     const handleLike = async () => {
         if (!streamId) return;
+        if (!user) {
+            toast.error('You must be logged in to like a stream');
+            return;
+        }
+        const res = await likeLiveStream(streamId, streamData?.playbackUrl);
 
-        try {
-            const res = await fetch(
-                `${process.env.NEXT_PUBLIC_BASE_API}/api/v1/streams/${streamId}/like`,
-                {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    credentials: 'include',
-                }
-            );
+        if (!res.success || !res.data) {
+            toast.error(res.message || "Failed to like stream");
+            return;
+        }
 
-            if (res.ok) {
-                if (liked) {
-                    setLiked(false);
-                    setLikeCount(prev => prev - 1);
-                } else {
-                    setLiked(true);
-                    setLikeCount(prev => prev + 1);
-                    if (disliked) setDisliked(false);
-                }
+        // 🔥 Always trust backend
+        setLiked(res.data.isLikedByMe);
+        setDisliked(false);
+        setLikeCount(res.data.totalLikes);
+        toast.success(res.message);
+    };
+
+    const handleDislike = async () => {
+
+        if (!streamId) return;
+        if (!user) {
+            toast.error('You must be logged in to dislike a stream');
+            return;
+        }
+        const res = await dislikeLiveStream(streamId, streamData?.playbackUrl);
+
+        if (!res.success || !res.data) {
+            toast.error(res.message || "Failed to like stream");
+            return;
+        }
+
+        // 🔥 Always trust backend
+        setLiked(res.data.isLikedByMe);
+        setDisliked(false);
+        setLikeCount(res.data.totalLikes);
+        toast.success(res.message);
+    };
+
+
+    const handleShare = async () => {
+        const shareUrl = `${window.location.origin}/stream/${streamId}`;
+
+        if (navigator.share) {
+            try {
+                await navigator.share({
+                    title: streamData?.title || 'Live Stream',
+                    text: streamData?.description || 'Watch this live stream',
+                    url: shareUrl,
+                });
+            } catch (err) {
+                console.error('Share cancelled or failed', err);
             }
-        } catch (error) {
-            console.error('Error liking stream:', error);
+        } else {
+            await navigator.clipboard.writeText(shareUrl);
+            toast.success('Link copied to clipboard!');
         }
     };
 
-    const handleDislike = () => {
-        setDisliked(!disliked);
-        if (liked) {
-            setLiked(false);
-            setLikeCount(prev => prev - 1);
-        }
-    };
 
     if (loading) {
         return (
@@ -414,12 +446,13 @@ export default function StreamPlayer() {
                         <div className="flex items-center gap-2 flex-wrap">
                             <ButtonGroup className="rounded-full">
                                 <Button
-                                    className={`gap-2 ${liked ? 'bg-blue-600' : ''}`}
                                     onClick={handleLike}
+                                    className={`gap-2`}
                                 >
                                     <ThumbsUp className="w-4 h-4" />
-                                    {likeCount?.toLocaleString()}
+                                    {likeCount}
                                 </Button>
+
                                 <Button
                                     className={`gap-2 ${disliked ? 'bg-gray-600' : ''}`}
                                     onClick={handleDislike}
@@ -428,7 +461,7 @@ export default function StreamPlayer() {
                                 </Button>
                             </ButtonGroup>
 
-                            <Button className="gap-2">
+                            <Button className="gap-2" onClick={handleShare}>
                                 <Share2 className="w-4 h-4" /> Share
                             </Button>
                         </div>

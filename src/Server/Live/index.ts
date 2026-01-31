@@ -143,7 +143,21 @@ export const stopLiveStream = async (streamId: string, playbackUrl?: string) => 
 };
 
 
-export const likeLiveStream = async (streamId: string, playbackUrl?: string) => {
+interface LikeResponse {
+    success: boolean;
+    message: string;
+    data?: {
+        liked: boolean;
+        isLikedByMe: boolean;
+        totalLikes: number;
+    };
+}
+
+
+export const likeLiveStream = async (
+    streamId: string,
+    playbackUrl?: string
+): Promise<LikeResponse> => {
     try {
         const cookieStore = await cookies();
         const accessToken = cookieStore.get("accessToken")?.value;
@@ -163,32 +177,63 @@ export const likeLiveStream = async (streamId: string, playbackUrl?: string) => 
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${accessToken}`,
                 },
-                body: JSON.stringify({
-                    playbackUrl: playbackUrl || "",
-                }),
+                body: JSON.stringify({ playbackUrl }),
                 credentials: "include",
                 cache: "no-store",
             }
         );
 
-        if (!res.ok) {
-            const errorData = await res.json();
-            return {
-                success: false,
-                message:
-                    errorData.message || `HTTP error! status: ${res.status}`,
-            };
-        }
-
         const data = await res.json();
-        return data;
 
+        return data;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-        console.error("Error stopping live stream:", error);
         return {
             success: false,
             message: "Network error occurred",
         };
     }
 };
+
+export const dislikeLiveStream = async (
+    streamId: string,
+    playbackUrl?: string
+): Promise<LikeResponse> => {
+    try {
+        const cookieStore = await cookies();
+        const accessToken = cookieStore.get("accessToken")?.value;
+
+        if (!accessToken) {
+            return {
+                success: false,
+                message: "No access token found",
+            };
+        }
+
+        const res = await fetch(
+            `${process.env.NEXT_PUBLIC_BASE_API}/api/v1/streams/${streamId}/dislike`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${accessToken}`,
+                },
+                body: JSON.stringify({ playbackUrl }),
+                credentials: "include",
+                cache: "no-store",
+            }
+        );
+
+        const data = await res.json();
+
+        return data;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+        return {
+            success: false,
+            message: "Network error occurred",
+        };
+    }
+};
+
 

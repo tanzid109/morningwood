@@ -1,10 +1,9 @@
 'use client';
-
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Heart, Radio, Star } from 'lucide-react';
+import { Play, Radio, Star } from 'lucide-react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
@@ -45,7 +44,7 @@ export default function MainCard({
     return (
         <Card
             className={cn(
-                'w-full overflow-hidden hover:scale-[1.02] duration-200 p-1',
+                'w-full overflow-hidden hover:scale-[1.02] duration-200 p-1 cursor-pointer',
                 className
             )}
             onClick={() => handleId(_id)}
@@ -59,17 +58,15 @@ export default function MainCard({
                     className="object-cover rounded-2xl"
                     unoptimized
                 />
-
+                <div className='absolute p-1 rounded-full bg-[#fdd3c660] bottom-1/2 right-1/2 translate-x-1/2 translate-y-1/2'>
+                    <Play className="w-6 h-6 text-white" />
+                </div>
                 <div className="absolute top-3 left-3 z-10">
                     <Badge className="bg-red-600 text-white text-xs flex items-center gap-1">
                         <Radio className="w-3 h-3 animate-pulse" />
                         Live
                     </Badge>
                 </div>
-
-                <button className="absolute top-3 right-3 z-10">
-                    <Heart className="w-5 h-5 text-white" />
-                </button>
             </div>
 
             <CardContent>

@@ -4,7 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Heart, Star } from 'lucide-react';
+import { Play, Star } from 'lucide-react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
@@ -45,7 +45,7 @@ export default function RecordCard({
     return (
         <Card
             className={cn(
-                'w-full overflow-hidden hover:scale-[1.02] duration-200',
+                'w-full overflow-hidden hover:scale-[1.02] duration-200 cursor-pointer',
                 className
             )}
             onClick={() => handleId(_id)}
@@ -59,9 +59,9 @@ export default function RecordCard({
                     className="object-cover rounded-2xl"
                     unoptimized
                 />
-                <button className="absolute top-3 right-3 z-10">
-                    <Heart className="w-5 h-5 text-white" />
-                </button>
+                <div className='absolute p-1 rounded-full bg-[#fdd3c660] bottom-1/2 right-1/2 translate-x-1/2 translate-y-1/2'>
+                    <Play className="w-6 h-6 text-white" />
+                </div>
             </div>
 
             <CardContent>
