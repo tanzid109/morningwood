@@ -1,9 +1,9 @@
-import LiveStream from "@/components/Live/LiveStream";
+import LovedStream from "@/components/LovedStream/LovedStream";
 
 const page = () => {
     return (
         <div>
-            <LiveStream />
+            <LovedStream/>
         </div>
     );
 };
